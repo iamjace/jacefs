@@ -21,7 +21,11 @@ typedef uint16_t jacefs_file_id_t;
 
 jacefs_error_t jacefs_init(void);
 jacefs_error_t jacefs_create(jacefs_file_id_t *file_id,int size,uint16_t app_id);
-
+jacefs_error_t jacefs_delete(jacefs_file_id_t file_id,uint16_t app_id);
+jacefs_error_t jacefs_delete_by_appid(uint16_t app_id);
+int jacefs_append(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size);
+int jacefs_write(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,int offset);
+int jacefs_read(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,int offset);
 
 void jacefs_self_test(void);
 
