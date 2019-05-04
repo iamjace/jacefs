@@ -1,0 +1,344 @@
+main(),61:system starting...
+fs_port_control(),219:erase addr=40a4c0 page=0 success!
+fs_port_control(),219:erase addr=40a4e8 page=1 success!
+fs_port_control(),219:erase addr=40a510 page=2 success!
+fs_port_control(),219:erase addr=40a538 page=3 success!
+fs_port_control(),219:erase addr=40a560 page=4 success!
+fs_port_control(),219:erase addr=40a588 page=5 success!
+fs_port_control(),219:erase addr=40a5b0 page=6 success!
+fs_port_control(),219:erase addr=40a5d8 page=7 success!
+fs_port_control(),219:erase addr=40a600 page=8 success!
+fs_port_control(),219:erase addr=40a628 page=9 success!
+fs_port_control(),219:erase addr=40a650 page=10 success!
+fs_port_control(),219:erase addr=40a678 page=11 success!
+fs_port_control(),219:erase addr=40a6a0 page=12 success!
+fs_port_control(),219:erase addr=40a6c8 page=13 success!
+fs_port_control(),219:erase addr=40a6f0 page=14 success!
+jacefs_init(),951:format fs success!
+jacefs_init(),1010:fs is ready!
+calculate_remaining_size(),274:remaining size=9640(9 KB),used=600(0 KB)
+
+SPACE_DESC_START_PAGE=0
+FS_TOTAL_PAGE=256
+FS_TOTAL_SIZE=10240 (10KB)
+FS_PAGE_SIZE=40
+
+FILE_DESC_PER_PAGE=2
+SPACE_BYTE_PER_PAGE=2
+SPACE_DESC_PAGE_NUM=13
+FS_MANAGE_PAGE_MAX=65536
+FS_MANAGE_PAGE_MIN=15
+
+find_file_desc_page(),307:found page=13
+jacefs_init(),977:page=13,file_num=0 crc=1d0f
+jacefs_init(),1005:page=13 file desc crc16 pass!
+find_file_desc_page(),307:found page=14
+jacefs_init(),977:page=14,file_num=0 crc=1d0f
+jacefs_init(),1005:page=14 file desc crc16 pass!
+jacefs_init(),1010:fs is ready!
+calculate_remaining_size(),274:remaining size=9640(9 KB),used=600(0 KB)
+addr=40a4c0 fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffd fffd ffff ffff ffff ffff ffff 
+addr=40a4e8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a510 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a538 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a560 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a588 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5b0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5d8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a600 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a628 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a650 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a678 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6a0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6c8 1d0f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6f0 1d0f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a718 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a740 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a768 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a790 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7b8 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7e0 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a808 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a830 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a858 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a880 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+
+jacefs_create(),1050:try to create file_id=1,app_id=0,size=155 !
+find_file_desc_page(),307:found page=13
+find_file_desc_page(),307:found page=14
+file_exist(),623:not found file=1,app_id=0 !
+find_file_desc_page(),307:found page=13
+jacefs_create(),1081:file_num=0 crc=1d0f
+alloc_page(),391:alloc page=15,rem=9600
+alloc_page(),391:alloc page=16,rem=9560
+alloc_page(),391:alloc page=17,rem=9520
+alloc_page(),391:alloc page=18,rem=9480
+alloc_page(),430:remaining size=9480(9 KB),used=760(0 KB),req=155 (alloc=160),page=15
+fs_port_control(),219:erase addr=40a6c8 page=13 success!
+addr=40a4c0 fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffd fffd 0010 0011 0012 fff9 ffff 
+addr=40a4e8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a510 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a538 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a560 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a588 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5b0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5d8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a600 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a628 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a650 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a678 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6a0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6c8 1d0f 0001 0001 0000 009b 0000 0000 0000 000f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6f0 1d0f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a718 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a740 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a768 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a790 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7b8 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7e0 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a808 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a830 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a858 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a880 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+
+jacefs_create(),1050:try to create file_id=2,app_id=0,size=196 !
+find_file_desc_page(),307:found page=13
+find_file_desc_page(),307:found page=14
+file_exist(),623:not found file=2,app_id=0 !
+find_file_desc_page(),307:found page=13
+jacefs_create(),1081:file_num=1 crc=1d0f
+alloc_page(),391:alloc page=19,rem=9440
+alloc_page(),391:alloc page=20,rem=9400
+alloc_page(),391:alloc page=21,rem=9360
+alloc_page(),391:alloc page=22,rem=9320
+alloc_page(),391:alloc page=23,rem=9280
+alloc_page(),430:remaining size=9280(9 KB),used=960(0 KB),req=196 (alloc=200),page=19
+fs_port_control(),219:erase addr=40a6c8 page=13 success!
+addr=40a4c0 fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffd fffd 0010 0011 0012 fff9 0014 
+addr=40a4e8 0015 0016 0017 fff9 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a510 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a538 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a560 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a588 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5b0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5d8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a600 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a628 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a650 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a678 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6a0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6c8 1d0f 0002 0001 0000 009b 0000 0000 0000 000f 0000 0002 0000 00c4 0000 0000 0000 0013 0000 ffff ffff 
+addr=40a6f0 1d0f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a718 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a740 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a768 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a790 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7b8 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7e0 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a808 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a830 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a858 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a880 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+
+jacefs_delete(),1156:delete file=1,app_id=0 !
+find_file_desc_page(),307:found page=13
+delete_file_desc(),847:found & delete file=1,app_id=0,start_page=15 in page=13 num=0!
+fs_port_control(),219:erase addr=40a6c8 page=13 success!
+free_page(),463:page=15,space_desc_addr=40a4c0!
+free_page(),478:free page=15,offset_in_page=30,next free page=16
+free_page(),500:free page=16,offset_in_page=32,next free page=17
+free_page(),500:free page=17,offset_in_page=34,next free page=18
+free_page(),500:free page=18,offset_in_page=36,next free page=65529
+fs_port_control(),219:erase addr=40a4c0 page=0 success!
+free_page(),556:free space finish,remaining size=9440(9 KB),used=800(0 KB),start_page=15
+addr=40a4c0 fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffd fffd ffff ffff ffff ffff 0014 
+addr=40a4e8 0015 0016 0017 fff9 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a510 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a538 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a560 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a588 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5b0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5d8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a600 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a628 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a650 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a678 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6a0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6c8 0fbd 0001 0002 0000 00c4 0000 0000 0000 0013 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6f0 1d0f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a718 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a740 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a768 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a790 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7b8 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7e0 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a808 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a830 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a858 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a880 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+
+jacefs_create(),1050:try to create file_id=1,app_id=0,size=1179 !
+find_file_desc_page(),307:found page=13
+find_file_desc_page(),307:found page=14
+file_exist(),623:not found file=1,app_id=0 !
+find_file_desc_page(),307:found page=13
+jacefs_create(),1081:file_num=1 crc=fbd
+alloc_page(),391:alloc page=15,rem=9400
+alloc_page(),391:alloc page=16,rem=9360
+alloc_page(),391:alloc page=17,rem=9320
+alloc_page(),391:alloc page=18,rem=9280
+alloc_page(),391:alloc page=24,rem=9240
+alloc_page(),391:alloc page=25,rem=9200
+alloc_page(),391:alloc page=26,rem=9160
+alloc_page(),391:alloc page=27,rem=9120
+alloc_page(),391:alloc page=28,rem=9080
+alloc_page(),391:alloc page=29,rem=9040
+alloc_page(),391:alloc page=30,rem=9000
+alloc_page(),391:alloc page=31,rem=8960
+alloc_page(),391:alloc page=32,rem=8920
+alloc_page(),391:alloc page=33,rem=8880
+alloc_page(),391:alloc page=34,rem=8840
+alloc_page(),391:alloc page=35,rem=8800
+alloc_page(),391:alloc page=36,rem=8760
+alloc_page(),391:alloc page=37,rem=8720
+alloc_page(),391:alloc page=38,rem=8680
+alloc_page(),391:alloc page=39,rem=8640
+alloc_page(),391:alloc page=40,rem=8600
+alloc_page(),391:alloc page=41,rem=8560
+alloc_page(),391:alloc page=42,rem=8520
+alloc_page(),391:alloc page=43,rem=8480
+alloc_page(),391:alloc page=44,rem=8440
+alloc_page(),391:alloc page=45,rem=8400
+alloc_page(),391:alloc page=46,rem=8360
+alloc_page(),391:alloc page=47,rem=8320
+alloc_page(),391:alloc page=48,rem=8280
+alloc_page(),391:alloc page=49,rem=8240
+alloc_page(),430:remaining size=8240(8 KB),used=2000(1 KB),req=1179 (alloc=1200),page=15
+fs_port_control(),219:erase addr=40a6c8 page=13 success!
+addr=40a4c0 fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffd fffd 0010 0011 0012 0018 0014 
+addr=40a4e8 0015 0016 0017 fff9 0019 001a 001b 001c 001d 001e 001f 0020 0021 0022 0023 0024 0025 0026 0027 0028 
+addr=40a510 0029 002a 002b 002c 002d 002e 002f 0030 0031 fff9 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a538 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a560 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a588 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5b0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5d8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a600 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a628 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a650 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a678 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6a0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6c8 0fbd 0002 0002 0000 00c4 0000 0000 0000 0013 0000 0001 0000 049b 0000 0000 0000 000f 0000 ffff ffff 
+addr=40a6f0 1d0f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a718 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a740 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a768 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a790 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7b8 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7e0 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a808 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a830 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a858 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a880 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+
+find_file_desc_page(),307:found page=13
+get_file_desc(),685:found file=1,app_id=0 in page=13 num=1!
+jacefs_append(),1238:before write id=1,app_id=0,start_page=15,wsize=0,size=1179
+jacefs_append(),1262:write page=15
+fs_port_control(),219:erase addr=40a718 page=15 success!
+jacefs_append(),1296:write size=40,remain=50 
+jacefs_append(),1262:write page=16
+fs_port_control(),219:erase addr=40a740 page=16 success!
+jacefs_append(),1296:write size=40,remain=10 
+jacefs_append(),1262:write page=17
+fs_port_control(),219:erase addr=40a768 page=17 success!
+jacefs_append(),1296:write size=10,remain=0 
+find_file_desc_page(),307:found page=13
+set_file_desc(),750:found & set file=1,app_id=0,ws=15,s=90,start_page=1179 in page=13 num=1,!
+fs_port_control(),219:erase addr=40a6c8 page=13 success!
+jacefs_append(),1304:after write id=1,app_id=0,start_page=15,wsize=90,size=1179
+addr=40a4c0 fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffd fffd 0010 0011 0012 0018 0014 
+addr=40a4e8 0015 0016 0017 fff9 0019 001a 001b 001c 001d 001e 001f 0020 0021 0022 0023 0024 0025 0026 0027 0028 
+addr=40a510 0029 002a 002b 002c 002d 002e 002f 0030 0031 fff9 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a538 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a560 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a588 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5b0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5d8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a600 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a628 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a650 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a678 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6a0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6c8 ac80 0002 0002 0000 00c4 0000 0000 0000 0013 0000 0001 0000 049b 0000 005a 0000 000f 0000 ffff ffff 
+addr=40a6f0 1d0f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a718 0100 0302 0504 0706 0908 0b0a 0d0c 0f0e 1110 1312 1514 1716 1918 1b1a 1d1c 1f1e 2120 2322 2524 2726 
+addr=40a740 2928 2b2a 2d2c 2f2e 3130 3332 3534 3736 3938 3b3a 3d3c 3f3e 4140 4342 4544 4746 4948 4b4a 4d4c 4f4e 
+addr=40a768 5150 5352 5554 5756 5958 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a790 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7b8 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7e0 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a808 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a830 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a858 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a880 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+
+find_file_desc_page(),307:found page=13
+get_file_desc(),685:found file=1,app_id=0 in page=13 num=1!
+jacefs_append(),1238:before write id=1,app_id=0,start_page=15,wsize=90,size=1179
+jacefs_append(),1262:write page=17
+jacefs_append(),1296:write size=30,remain=60 
+jacefs_append(),1262:write page=18
+fs_port_control(),219:erase addr=40a790 page=18 success!
+jacefs_append(),1296:write size=40,remain=20 
+jacefs_append(),1262:write page=24
+fs_port_control(),219:erase addr=40a880 page=24 success!
+jacefs_append(),1296:write size=20,remain=0 
+find_file_desc_page(),307:found page=13
+set_file_desc(),750:found & set file=1,app_id=0,ws=15,s=180,start_page=1179 in page=13 num=1,!
+fs_port_control(),219:erase addr=40a6c8 page=13 success!
+jacefs_append(),1304:after write id=1,app_id=0,start_page=15,wsize=180,size=1179
+addr=40a4c0 fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffe fffd fffd 0010 0011 0012 0018 0014 
+addr=40a4e8 0015 0016 0017 fff9 0019 001a 001b 001c 001d 001e 001f 0020 0021 0022 0023 0024 0025 0026 0027 0028 
+addr=40a510 0029 002a 002b 002c 002d 002e 002f 0030 0031 fff9 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a538 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a560 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a588 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5b0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a5d8 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a600 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a628 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a650 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a678 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6a0 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a6c8 42a8 0002 0002 0000 00c4 0000 0000 0000 0013 0000 0001 0000 049b 0000 00b4 0000 000f 0000 ffff ffff 
+addr=40a6f0 1d0f 0000 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+addr=40a718 0100 0302 0504 0706 0908 0b0a 0d0c 0f0e 1110 1312 1514 1716 1918 1b1a 1d1c 1f1e 2120 2322 2524 2726 
+addr=40a740 2928 2b2a 2d2c 2f2e 3130 3332 3534 3736 3938 3b3a 3d3c 3f3e 4140 4342 4544 4746 4948 4b4a 4d4c 4f4e 
+addr=40a768 5150 5352 5554 5756 5958 0100 0302 0504 0706 0908 0b0a 0d0c 0f0e 1110 1312 1514 1716 1918 1b1a 1d1c 
+addr=40a790 1f1e 2120 2322 2524 2726 2928 2b2a 2d2c 2f2e 3130 3332 3534 3736 3938 3b3a 3d3c 3f3e 4140 4342 4544 
+addr=40a7b8 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a7e0 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a808 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a830 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a858 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 5555 
+addr=40a880 4746 4948 4b4a 4d4c 4f4e 5150 5352 5554 5756 5958 ffff ffff ffff ffff ffff ffff ffff ffff ffff ffff 
+
+find_file_desc_page(),307:found page=13
+get_file_desc(),685:found file=1,app_id=0 in page=13 num=1!
+jacefs_read(),1366:read id=1,app_id=0,start_page=15,wsize=180,size=1179
+jacefs_read(),1397:read page=15
+jacefs_read(),1418:read size=40,remain=140 
+jacefs_read(),1397:read page=16
+jacefs_read(),1418:read size=40,remain=100 
+jacefs_read(),1397:read page=17
+jacefs_read(),1418:read size=40,remain=60 
+jacefs_read(),1397:read page=18
+jacefs_read(),1418:read size=40,remain=20 
+jacefs_read(),1397:read page=24
+jacefs_read(),1418:read size=20,remain=0 
+0100 0302 0504 0706 0908 0b0a 0d0c 0f0e 1110 1312 1514 1716 1918 1b1a 1d1c 1f1e 2120 2322 2524 2726 
+2928 2b2a 2d2c 2f2e 3130 3332 3534 3736 3938 3b3a 3d3c 3f3e 4140 4342 4544 4746 4948 4b4a 4d4c 4f4e 
+5150 5352 5554 5756 5958 0100 0302 0504 0706 0908 0b0a 0d0c 0f0e 1110 1312 1514 1716 1918 1b1a 1d1c 
+1f1e 2120 2322 2524 2726 2928 2b2a 2d2c 2f2e 3130 3332 3534 3736 3938 3b3a 3d3c 3f3e 4140 4342 4544 
+4746 4948 4b4a 4d4c 4f4e 5150 5352 5554 5756 5958 

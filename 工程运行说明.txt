@@ -1,0 +1,6 @@
+
+
+1 在windows电脑上安装gcc
+2 运行 test_prj/build.bat 即可编译并运行 jacefs测试工程
+
+
