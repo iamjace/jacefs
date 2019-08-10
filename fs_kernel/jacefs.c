@@ -2,24 +2,32 @@
 ******************************************************************************
 - file    		jacefs.c 
 - author  		jace
-- version 		V1.2
+- version 		V1.3
 - create date	2018.11.11
 - brief 
-	jacefs Ô´Âë¡£
+	jacefs æºç ã€‚
     
+	ä¸‹è½½åœ°å€ï¼š
+	aliyun code : https://code.aliyun.com/jace/jacefs.git
+	gitee.com   : https://gitee.com/jacelin/jacefs.git
+	github.com  : https://github.com/iamjace/jacefs.git
+	
 ******************************************************************************
 - release note:
 
 2018.11.11 V1.0
-    ´´½¨¹¤³Ì£¬ÊµÏÖjacefsÎÄ¼şÏµÍ³¡£
-    Ôö¼ÓÎÄ¼ş´´½¨½Ó¿Ú£¬ÈÕÇ°°æ±¾½öÓÃÒ»¸öÒ³À´¼ÇÂ¼ÎÄ¼şĞÅÏ¢£¬×î´óÎÄ¼şÊı JACEFS_FILE_NUM ¶¨ÒåÎªÒ»Ò³¿É´æÎÄ¼şÊı
+    åˆ›å»ºå·¥ç¨‹ï¼Œå®ç°jacefsæ–‡ä»¶ç³»ç»Ÿã€‚
+    å¢åŠ æ–‡ä»¶åˆ›å»ºæ¥å£ï¼Œæ—¥å‰ç‰ˆæœ¬ä»…ç”¨ä¸€ä¸ªé¡µæ¥è®°å½•æ–‡ä»¶ä¿¡æ¯ï¼Œæœ€å¤§æ–‡ä»¶æ•° JACEFS_FILE_NUM å®šä¹‰ä¸ºä¸€é¡µå¯å­˜æ–‡ä»¶æ•°
 
 2019.3.27 V1.1
-    Ôö¼ÓÎÄ¼ş¶ÁÈ¡½Ó¿Ú
+    å¢åŠ æ–‡ä»¶è¯»å–æ¥å£
 
 2019.5.4  V1.2
-	ÍêÉÆÎÄ¼şÏµÍ³£¬°üÀ¨ÎÄ¼ş¶Á¡¢Ğ´µÈ¹¦ÄÜ¡£
-
+	å®Œå–„æ–‡ä»¶ç³»ç»Ÿï¼ŒåŒ…æ‹¬æ–‡ä»¶è¯»ã€å†™ç­‰åŠŸèƒ½ã€‚
+	
+2019.8.10  V1.3
+	å¢åŠ RAMç¼“å­˜æ–‡ä»¶æè¿°ï¼Œæå‡è¯»å†™é€Ÿåº¦ã€‚
+	
 ******************************************************************************
 */
 #include <stdint.h>
@@ -50,37 +58,37 @@
 
 
 //
-//----------------------ÎÄ¼şÏµÍ³ºê¶¨Òå---------------
+//----------------------æ–‡ä»¶ç³»ç»Ÿå®å®šä¹‰---------------
 //
 
-//¿Õ¼ä¿éÆğÊ¼Ò³£¨Ïà¶ÔÓÚ FS_HW_START_ADDR µÄÒ³Êı£¬¶ø²»ÊÇÊµ¼ÊµÄÎïÀíÒ³£©
+//ç©ºé—´å—èµ·å§‹é¡µï¼ˆç›¸å¯¹äº FS_HW_START_ADDR çš„é¡µæ•°ï¼Œè€Œä¸æ˜¯å®é™…çš„ç‰©ç†é¡µï¼‰
 #define SPACE_DESC_START_PAGE (0) 
 
-//ÎÄ¼şÏµÍ³×ÜÒ³Êı
+//æ–‡ä»¶ç³»ç»Ÿæ€»é¡µæ•°
 #define FS_TOTAL_SIZE (FS_HW_TOTAL_SIZE) 
 
-//ÎÄ¼şÏµÍ³×Ü´óĞ¡
+//æ–‡ä»¶ç³»ç»Ÿæ€»å¤§å°
 #define FS_TOTAL_PAGE (FS_HW_PAGE_NUM) 
 
-//Ò³´óĞ¡                            
+//é¡µå¤§å°                            
 #define FS_PAGE_SIZE (FS_HW_PAGE_SIZE) 
                             
-//1Ò³¿É×°ÎÄ¼şÃèÊöÊıÁ¿(Ç°4×Ö½ÚÎª 2×Ö½ÚCRC16+2×Ö½ÚÎÄ¼şÊı)
+//1é¡µå¯è£…æ–‡ä»¶æè¿°æ•°é‡(å‰4å­—èŠ‚ä¸º 2å­—èŠ‚CRC16+2å­—èŠ‚æ–‡ä»¶æ•°)
 #define FILE_DESC_PER_PAGE ((FS_PAGE_SIZE-4)/sizeof(jacefs_fd_t)) 
 
-//ÎÄ¼şÃèÊöÊ¹ÓÃÒ³(ÏµÍ³¸ñÊ½»¯Ê±Ä¬ÈÏÖ»ÓÃ1Ò³£¬ÔÚÎÄ¼şÊıÔö¼Óµ½2Ò³ºóÔÙ¶¯Ì¬·ÖÅä¿Õ¼ä)
-#define FILE_DESC_PAGE_NUM_DEFAULT (2) 
+//æ–‡ä»¶æè¿°ä½¿ç”¨é¡µ(ç³»ç»Ÿæ ¼å¼åŒ–æ—¶é»˜è®¤åªç”¨1é¡µï¼Œåœ¨æ–‡ä»¶æ•°å¢åŠ åˆ°2é¡µåå†åŠ¨æ€åˆ†é…ç©ºé—´--å¾…å®ç°)
+#define FILE_DESC_PAGE_NUM_DEFAULT (1)
 
-//¿Õ¼ä¿éÖĞ£¬Ò³Ê¹ÓÃÃèÊöÕ¼ÓÃ×Ö½Ú(2×Ö½Ú¿ÉÃèÊö256MB£¬4×Ö½Ú¿ÉÃèÊö 16777216 MB)
+//ç©ºé—´å—ä¸­ï¼Œé¡µä½¿ç”¨æè¿°å ç”¨å­—èŠ‚(2å­—èŠ‚å¯æè¿°256MBï¼Œ4å­—èŠ‚å¯æè¿° 16777216 MB)
 #define SPACE_BYTE_PER_PAGE 2 
 
-//¿Õ¼ä¿éÕ¼ÓÃÒ³
+//ç©ºé—´å—å ç”¨é¡µ
 #define SPACE_DESC_PAGE_NUM (FS_TOTAL_PAGE/(FS_PAGE_SIZE/SPACE_BYTE_PER_PAGE)+1) 
 
-//ÎÄ¼şÏµÍ³×î¶à¿É¹ÜÀíÒ³
+//æ–‡ä»¶ç³»ç»Ÿæœ€å¤šå¯ç®¡ç†é¡µ
 #define FS_MANAGE_PAGE_MAX (0x1<<(SPACE_BYTE_PER_PAGE*8)) 
 
-//ÏµÍ³×îÉÙÒ³£º¿Õ¼ä¹ÜÀí¿é+ÎÄ¼şÃèÊö¿é
+//ç³»ç»Ÿæœ€å°‘é¡µï¼šç©ºé—´ç®¡ç†å—+æ–‡ä»¶æè¿°å—
 #define FS_MANAGE_PAGE_MIN (SPACE_DESC_PAGE_NUM+FILE_DESC_PAGE_NUM_DEFAULT)
 
 #if (FS_MANAGE_PAGE_MAX<FS_TOTAL_PAGE)
@@ -89,10 +97,10 @@
 	#error  "jacefs page too little!!!"
 #endif
 
-//ÎÄ¼şÃèÊö¿é
+//æ–‡ä»¶æè¿°å—
 #define FILE_DESC_START_PAGE (SPACE_DESC_START_PAGE+SPACE_DESC_PAGE_NUM)
 
-//Ò³Ê¹ÓÃÃèÊö£¨Ä¿Ç°½öÖ§³Ö2×Ö½ÚµÄ·½Ê½£©
+//é¡µä½¿ç”¨æè¿°ï¼ˆç›®å‰ä»…æ”¯æŒ2å­—èŠ‚çš„æ–¹å¼ï¼‰
 #if SPACE_BYTE_PER_PAGE==2
     typedef uint16_t page_desc_val_t;
 //#elif SPACE_BYTE_PER_PAGE==4
@@ -102,39 +110,39 @@
 	#error  "SPACE_BYTE_PER_PAGE value must be 2!"
 #endif
 
-//Ò³×ª³ÉµØÖ·
+//é¡µè½¬æˆåœ°å€
 #define PAGE_TO_ADDR(page) ((page)*FS_PAGE_SIZE+FS_HW_START_ADDR)
 
 //
-//----------------------ÎÄ¼şÏµÍ³Êı¾İ½á¹¹---------------
+//----------------------æ–‡ä»¶ç³»ç»Ÿæ•°æ®ç»“æ„---------------
 //
-//Ò³Ê¹ÓÃ±êÊ¶
+//é¡µä½¿ç”¨æ ‡è¯†
 typedef enum{
     PAGE_NOT_USED		=0xffff,
     PAGE_SPACE_BLOCK	=0xfffe,
     PAGE_FILE_DESC		=0xfffd,
     
-    //0xfffc~0xfffa Ô¤Áô
+    //0xfffc~0xfffa é¢„ç•™
     
     PAGE_FILE_END		=0xfff9,
     PAGE_FILE_USING_MAX	=0xfff8,
     PAGE_FILE_USING_MIN	=0x0,
 }fs_page_status_t;
 
-//ÎÄ¼şÃèÊö
+//æ–‡ä»¶æè¿°
 typedef struct{
-    uint16_t id;			/* ÎÄ¼şID */    
-	uint16_t app_id;        /* ÎÄ¼şÊôÓÚµÄAPP ID */  
-    uint32_t size;          /* ÎÄ¼ş´óĞ¡ */
-    uint32_t wsize;         /* ÎÄ¼şÒÑĞ´Èë´óĞ¡ */
+    uint16_t id;			/* æ–‡ä»¶ID */    
+	uint16_t app_id;        /* æ–‡ä»¶å±äºçš„APP ID */  
+    uint32_t size;          /* æ–‡ä»¶å¤§å° */
+    uint32_t wsize;         /* æ–‡ä»¶å·²å†™å…¥å¤§å° */
 	
 #if SPACE_BYTE_PER_PAGE==2
-    uint16_t start_page;    /* ÎÄ¼ş´æ´¢¿ªÊ¼Ò³ */
+    uint16_t start_page;    /* æ–‡ä»¶å­˜å‚¨å¼€å§‹é¡µ */
 #else
 	#error  "SPACE_BYTE_PER_PAGE value must be 2!"
 #endif
 	
-//    uint8_t flag;          /* ÎÄ¼ş±êÊ¶ */
+//    uint8_t flag;          /* æ–‡ä»¶æ ‡è¯† */
     uint8_t reserved[2];    
 }jacefs_fd_t;
 
@@ -145,21 +153,186 @@ typedef struct{
 
 
 //
-//----------------------ÎÄ¼şÏµÍ³±äÁ¿---------------
+//----------------------æ–‡ä»¶ç³»ç»Ÿç©ºé—´é¡µå’Œæ–‡ä»¶æè¿°é¡µç¼“å­˜ï¼ˆä¸ºäº†æé«˜è¯»å†™é€Ÿåº¦ï¼Œç”¨RAMç¼“å­˜ï¼‰---------------
+//
+#if FS_USE_RAM_CACHE
+    static uint8_t m_info_cache[(SPACE_DESC_PAGE_NUM+FILE_DESC_PAGE_NUM_DEFAULT)*FS_PAGE_SIZE];
+    static page_desc_val_t *m_space_desc_cache=(page_desc_val_t *)m_info_cache;
+    static uint8_t *m_file_desc_cache=&m_info_cache[SPACE_DESC_PAGE_NUM*FS_PAGE_SIZE];
+
+//    #define PAGE_TO_CACHE_ADDR(page) ((page)*(FS_PAGE_SIZE/SPACE_BYTE_PER_PAGE))
+
+    #define PAGE_TO_SPACE_DESC_ADDR(page) (((page)-SPACE_DESC_START_PAGE)*(FS_PAGE_SIZE/SPACE_BYTE_PER_PAGE))
+    #define PAGE_TO_FILE_DESC_ADDR(page) (((page)-FILE_DESC_START_PAGE)*FS_PAGE_SIZE)
+
+    typedef enum{
+        FS_SYNC_NONE=0,
+        FS_SYNC_SPACE_DESC=0x1<<0,
+        FS_SYNC_FILE_DESC=0x1<<1,
+        FS_SYNC_ALL=FS_SYNC_SPACE_DESC|FS_SYNC_FILE_DESC,
+    }fs_sync_t;
+    static uint8_t m_fs_sync=FS_SYNC_NONE;
+#endif
+
+
+//
+//----------------------æ–‡ä»¶ç³»ç»Ÿå˜é‡---------------
 //
 static bool m_fs_ready=false;
 static uint32_t m_fs_remainig_size=0;
-static uint8_t m_swap_buf[FS_PAGE_SIZE];
+#if !FS_USE_RAM_CACHE
+    static uint8_t m_swap_buf[FS_PAGE_SIZE];
+#endif
 
+/*---------------------------------------------------------------------------------------------------*/
+#if FS_USE_LOCK
+    #ifndef OS_BAREMETAL
 
+    static OS_MUTEX m_fs_lock=NULL;
+
+    static inline void fs_lock()
+    {
+        if(m_fs_lock==NULL)
+        {
+            OS_MUTEX_CREATE(m_fs_lock);
+        }
+        OS_MUTEX_GET(m_fs_lock, OS_MUTEX_FOREVER);
+    }
+
+    static inline void fs_unlock()
+    {
+        OS_MUTEX_PUT(m_fs_lock);
+    }
+
+    #endif
+#else
+	#define fs_lock() 
+	#define fs_unlock() 
+#endif
+/*---------------------------------------------------------------------------------------------------*/
+
+#if FS_USE_RAM_CACHE
 /**
-@brief : ¸ñÊ½»¯Îª jacefs
-		
-@param : ÎŞ
+@brief : ç¼“å­˜ä¿¡æ¯åŒæ­¥åˆ°flash
+                è¯¥å‡½æ•°æ”¾åœ¨å®šæ—¶å™¨ä¸­è°ƒç”¨ï¼Œå»ºè®®å®šæ—¶10S~30SåŒæ­¥ä¸€æ¬¡
+
+@param : æ— 
 
 @retval:
-- FS_RET_SUCCESS ¸ñÊ½»¯³É¹¦ 
-- FS_UNKNOW_ERR   ¸ñÊ½»¯Ê§°Ü
+- FS_RET_SUCCESS æˆåŠŸ
+- FS_UNKNOW_ERR   å¤±è´¥
+*/
+void jacefs_sync(void)
+{
+    int i;
+    uint32_t page;
+    fs_lock();
+
+    if(m_fs_sync==FS_SYNC_NONE)
+    {
+        FS_LOG("fs no need sync.\r\n");
+        fs_unlock();
+        return;
+    }
+
+    if(m_fs_sync&FS_SYNC_SPACE_DESC)
+    {
+        do{
+            for(i=0;i<SPACE_DESC_PAGE_NUM;i++)
+            {
+                page=SPACE_DESC_START_PAGE+i;
+                if(fs_port_control(FS_CTL_ERASE_PAGE,&page)!=FS_RET_SUCCESS)
+                {
+                    FS_LOG("erase page=%d error!\r\n",page);
+                    break ;
+                }
+            }
+
+            if(fs_port_write( PAGE_TO_ADDR(SPACE_DESC_START_PAGE),
+                SPACE_DESC_PAGE_NUM*FS_PAGE_SIZE,(uint8_t*)m_space_desc_cache)
+                !=SPACE_DESC_PAGE_NUM*FS_PAGE_SIZE)
+            {
+                FS_LOG("write err!\r\n");
+                break;
+            }
+
+            m_fs_sync&=~FS_SYNC_SPACE_DESC;
+        }while(0);
+        FS_LOG("fs sync space desc!\r\n");
+    }
+
+    if(m_fs_sync&FS_SYNC_FILE_DESC)
+    {
+        do{
+            for(i=0;i<FILE_DESC_PAGE_NUM_DEFAULT;i++)
+            {
+                page=FILE_DESC_START_PAGE+i;
+                if(fs_port_control(FS_CTL_ERASE_PAGE,&page)!=FS_RET_SUCCESS)
+                {
+                    FS_LOG("erase page=%d error!\r\n",page);
+                    break ;
+                }
+            }
+
+            if(fs_port_write( PAGE_TO_ADDR(FILE_DESC_START_PAGE),
+                FILE_DESC_PAGE_NUM_DEFAULT*FS_PAGE_SIZE,(uint8_t*)m_file_desc_cache)
+                !=FILE_DESC_PAGE_NUM_DEFAULT*FS_PAGE_SIZE)
+            {
+                FS_LOG("write err!\r\n");
+                break;
+            }
+
+            m_fs_sync&=~FS_SYNC_FILE_DESC;
+        }while(0);
+        FS_LOG("fs sync space desc!\r\n");
+    }
+    fs_unlock();
+}
+
+	//è¿™é‡Œè¦æ ¹æ®å…·ä½“çš„ç³»ç»Ÿå®šæ—¶å™¨æ¥å£ä¿®å¤ 
+#if 0
+static void fs_sync_timer_callback(TimerHandle_t id )
+{
+    jacefs_sync();
+}
+
+static int fs_sync_timer_init()
+{
+
+    TimerHandle_t hdl;
+    hdl=OS_TIMER_CREATE(NULL,
+        OS_MS_2_TICKS(10*1000),
+        pdTRUE,
+        NULL,
+        fs_sync_timer_callback
+        );
+
+    if(OS_TIMER_START(hdl,0)!= pdPASS)
+    {
+        FS_LOG("fs sync timer create err! \r\n");
+        return FS_RET_UNKNOW_ERR;
+    }
+    FS_LOG("fs sync timer create success! \r\n");
+    return FS_RET_SUCCESS;
+}
+#else
+	#define fs_sync_timer_init() FS_RET_SUCCESS
+#endif 
+
+
+#endif
+
+
+/*---------------------------------------------------------------------------------------------------*/
+
+/**
+@brief : æ ¼å¼åŒ–ä¸º jacefs
+		
+@param : æ— 
+
+@retval:
+- FS_RET_SUCCESS æ ¼å¼åŒ–æˆåŠŸ 
+- FS_UNKNOW_ERR   æ ¼å¼åŒ–å¤±è´¥
 */
 static jacefs_error_t format_to_jacefs(void)
 {
@@ -169,7 +342,7 @@ static jacefs_error_t format_to_jacefs(void)
     uint32_t page;
     uint32_t offset;
     
-    //¿Õ¼ä¿é¡¢ÎÄ¼şÃèÊö¿é ²Á³ı...
+    //ç©ºé—´å—ã€æ–‡ä»¶æè¿°å— æ“¦é™¤...
     for(i=0;i<(SPACE_DESC_PAGE_NUM+FILE_DESC_PAGE_NUM_DEFAULT);i++)
     {
         page=SPACE_DESC_START_PAGE+i;
@@ -180,7 +353,7 @@ static jacefs_error_t format_to_jacefs(void)
         }
     }
     
-    //¿Õ¼ä¿é£º¿Õ¼ä¿éĞ´Èë±êÊ¶
+    //ç©ºé—´å—ï¼šç©ºé—´å—å†™å…¥æ ‡è¯†
     desc_val=PAGE_SPACE_BLOCK;
     for(i=0;i<SPACE_DESC_PAGE_NUM;i++)
     {
@@ -193,7 +366,7 @@ static jacefs_error_t format_to_jacefs(void)
         }
     }
     
-    //¿Õ¼ä¿é£ºÎÄ¼şÃèÊö¿éĞ´±êÊ¶--Ö»Ğ´ÏµÍ³Ä¬ÈÏµÄÎÄ¼şÃèÊöÒ³
+    //ç©ºé—´å—ï¼šæ–‡ä»¶æè¿°å—å†™æ ‡è¯†--åªå†™ç³»ç»Ÿé»˜è®¤çš„æ–‡ä»¶æè¿°é¡µ
     desc_val=PAGE_FILE_DESC;
 	for(i=SPACE_DESC_PAGE_NUM;i<(SPACE_DESC_PAGE_NUM+FILE_DESC_PAGE_NUM_DEFAULT);i++)
     {
@@ -206,7 +379,7 @@ static jacefs_error_t format_to_jacefs(void)
         }
     }
     
-    //ÎÄ¼şÃèÊö¿éĞ£Ñé
+    //æ–‡ä»¶æè¿°å—æ ¡éªŒ
     jacefs_fd_hdr_t hd;
     hd.file_num=0;
     hd.crc16=crc16_compute((uint8_t*)&hd.file_num,sizeof(jacefs_fd_hdr_t)-2,0);
@@ -224,19 +397,19 @@ static jacefs_error_t format_to_jacefs(void)
 }
 
 /**
-@brief : ¼ÆËãÊ£Óà¿Õ¼ä
+@brief : è®¡ç®—å‰©ä½™ç©ºé—´
 		
-@param : ÎŞ
+@param : æ— 
 
 @retval:
 - @jacefs_error_t
 */
 static jacefs_error_t calculate_remaining_size()
 {
-    if(m_fs_ready!=true)
-    {
-        return FS_RET_NOT_READY;
-    }
+//    if(m_fs_ready!=true)
+//    {
+//        return FS_RET_NOT_READY;
+//    }
     
     page_desc_val_t page_desc_val;
     uint32_t addr;
@@ -247,22 +420,30 @@ static jacefs_error_t calculate_remaining_size()
     
     for(int i=0;i<SPACE_DESC_PAGE_NUM;i++)
     {
+#if !FS_USE_RAM_CACHE
         addr=PAGE_TO_ADDR(SPACE_DESC_START_PAGE+i);
+#else
+        addr=PAGE_TO_SPACE_DESC_ADDR(SPACE_DESC_START_PAGE+i);
+#endif
+
         for(int j=0;j<(FS_PAGE_SIZE/SPACE_BYTE_PER_PAGE);j++)
         {
+#if !FS_USE_RAM_CACHE
             if(fs_port_read(addr+sizeof(page_desc_val_t)*j,
                 sizeof(page_desc_val_t),(uint8_t*)&page_desc_val)<=0)
             {
                 FS_LOG("read error!\r\n");
                 return FS_RET_UNKNOW_ERR;
             }
-
+#else
+            page_desc_val=m_space_desc_cache[addr+j];
+#endif
             if(page_desc_val==PAGE_NOT_USED)
             {
                 m_fs_remainig_size+=FS_PAGE_SIZE;
             }
             
-			//¿Õ¼äÃèÊö¿é²»Ò»¶¨ÓÃµÄÍê£¬Ö»ÅĞ¶Ï×ÜÒ³ÊıÄÚµÄ¿Õ¼ä
+			//ç©ºé—´æè¿°å—ä¸ä¸€å®šç”¨çš„å®Œï¼Œåªåˆ¤æ–­æ€»é¡µæ•°å†…çš„ç©ºé—´
             page++;
             if(page>=FS_TOTAL_PAGE)
                 break;
@@ -278,29 +459,35 @@ static jacefs_error_t calculate_remaining_size()
 
 
 /**
-@brief : Ñ°ÕÒÎÄ¼şÃèÊöÒ³
+@brief : å¯»æ‰¾æ–‡ä»¶æè¿°é¡µ
 		
 @param : 
-- start_page ¾àÀë SPACE_DESC_START_PAGE µÄÒ³Êı£¬´Ó¸ÃÒ³¿ªÊ¼Ñ°ÕÒºóÃæµÄÎÄ¼şÃèÊöÒ³
+- start_page è·ç¦» SPACE_DESC_START_PAGE çš„é¡µæ•°ï¼Œä»è¯¥é¡µå¼€å§‹å¯»æ‰¾åé¢çš„æ–‡ä»¶æè¿°é¡µ
 
 @retval:
-- >0 ÎÄ¼şÃèÊöÒ³ÏÂ±ê
-- ==0 Ã»ÓĞÕÒµ½
+- >0 æ–‡ä»¶æè¿°é¡µä¸‹æ ‡
+- ==0 æ²¡æœ‰æ‰¾åˆ°
 */
 static uint32_t find_file_desc_page(uint32_t start_page)
 {
     page_desc_val_t page_desc_val;
     uint32_t addr;
 	
-    for(uint32_t i=start_page;i<FS_TOTAL_PAGE;i++)
+    for(uint32_t i=start_page;
+        i<FILE_DESC_START_PAGE+FILE_DESC_PAGE_NUM_DEFAULT;//i<FS_TOTAL_PAGE;
+        i++)
     {
+#if !FS_USE_RAM_CACHE
         addr=PAGE_TO_ADDR(SPACE_DESC_START_PAGE)+i*sizeof(page_desc_val_t);
-        
-		if(fs_port_read(addr,sizeof(page_desc_val_t),(uint8_t*)&page_desc_val)
-			!=sizeof(page_desc_val_t))
-		{
-			break;
-		}
+        if(fs_port_read(addr,sizeof(page_desc_val_t),(uint8_t*)&page_desc_val)
+            !=sizeof(page_desc_val_t))
+        {
+            break;
+        }
+#else
+        addr=PAGE_TO_SPACE_DESC_ADDR(SPACE_DESC_START_PAGE)+i;
+        page_desc_val=m_space_desc_cache[addr];
+#endif
 
 		if(page_desc_val==PAGE_FILE_DESC)
 		{
@@ -314,20 +501,22 @@ static uint32_t find_file_desc_page(uint32_t start_page)
 }
 
 /**
-@brief : ¶ÁÈ¡ÎÄ¼şÄ³Ò³Á´½ÓµÄÏÂÒ»Ò³
+@brief : è¯»å–æ–‡ä»¶æŸé¡µé“¾æ¥çš„ä¸‹ä¸€é¡µ
 		
 @param : 
-- page ÎÄ¼şÒ³
+- page æ–‡ä»¶é¡µ
 
 @retval:
-- >0 ÎÄ¼şÁ´½ÓµÄÏÂÒ»Ò³
-- ==0 Ã»ÓĞÕÒµ½
+- >0 æ–‡ä»¶é“¾æ¥çš„ä¸‹ä¸€é¡µ
+- ==0 æ²¡æœ‰æ‰¾åˆ°
 */
 static page_desc_val_t get_file_next_page(uint32_t page)
 {
-    page_desc_val_t page_desc_val;
     uint32_t addr;
-	
+
+#if !FS_USE_RAM_CACHE
+
+    page_desc_val_t page_desc_val;
 	addr=PAGE_TO_ADDR(SPACE_DESC_START_PAGE)+page*sizeof(page_desc_val_t);
 	
 	if(fs_port_read(addr,sizeof(page_desc_val_t),(uint8_t*)&page_desc_val)
@@ -335,16 +524,22 @@ static page_desc_val_t get_file_next_page(uint32_t page)
 	{
 		return page_desc_val;
 	}
+	return 0;
 
-    return 0;
+#else
+
+	addr=PAGE_TO_SPACE_DESC_ADDR(SPACE_DESC_START_PAGE)+page;
+	return m_space_desc_cache[addr];
+
+#endif
 }
 
 /**
-@brief : ·ÖÅä¿Õ¼ä
+@brief : åˆ†é…ç©ºé—´
 		
 @param : 
--req_size	ÉêÇëµÄ¿Õ¼ä´óĞ¡
--start_page	ÉêÇëµ½µÄÆğÊ¼Ò³µØÖ·
+-req_size	ç”³è¯·çš„ç©ºé—´å¤§å°
+-start_page	ç”³è¯·åˆ°çš„èµ·å§‹é¡µåœ°å€
 
 @retval:
 - @jacefs_error_t
@@ -367,6 +562,7 @@ static jacefs_error_t alloc_page(uint32_t req_size,uint16_t *start_page)
 	
 	for(uint32_t i=0;i<FS_TOTAL_PAGE;i++)
     {
+#if !FS_USE_RAM_CACHE
         addr=PAGE_TO_ADDR(SPACE_DESC_START_PAGE)+i*sizeof(page_desc_val_t);
         
 		if(fs_port_read(addr,sizeof(page_desc_val_t),(uint8_t*)&page_desc_val)
@@ -375,6 +571,10 @@ static jacefs_error_t alloc_page(uint32_t req_size,uint16_t *start_page)
 			FS_LOG("read error!\r\n");
             return FS_RET_UNKNOW_ERR;
 		}
+#else
+		addr=PAGE_TO_SPACE_DESC_ADDR(SPACE_DESC_START_PAGE)+i;
+		page_desc_val=m_space_desc_cache[addr];
+#endif
 
 		if(page_desc_val==PAGE_NOT_USED)
 		{
@@ -390,9 +590,10 @@ static jacefs_error_t alloc_page(uint32_t req_size,uint16_t *start_page)
 			
 			FS_LOG("alloc page=%d,rem=%d\r\n",i,m_fs_remainig_size);
 			
-			//ÉÏÒ»´Î·ÖÅäµÄÒ³Á´½Óµ½±¾´Î·ÖÅäµÄÒ³
+			//ä¸Šä¸€æ¬¡åˆ†é…çš„é¡µé“¾æ¥åˆ°æœ¬æ¬¡åˆ†é…çš„é¡µ
 			if(last_alloc_page!=0)
 			{
+#if !FS_USE_RAM_CACHE
 				addr=PAGE_TO_ADDR(SPACE_DESC_START_PAGE)+last_alloc_page*sizeof(page_desc_val_t);
 				
 				page_desc_val=i;
@@ -402,13 +603,18 @@ static jacefs_error_t alloc_page(uint32_t req_size,uint16_t *start_page)
 					FS_LOG("write error!\r\n");
 					return FS_RET_UNKNOW_ERR;
 				}
+#else
+				addr=PAGE_TO_SPACE_DESC_ADDR(SPACE_DESC_START_PAGE)+last_alloc_page;
+				m_space_desc_cache[addr]=(page_desc_val_t)i;
+#endif
 			}
 			
 			if(alloc_size>=req_size)
 			{
+#if !FS_USE_RAM_CACHE
 				addr=PAGE_TO_ADDR(SPACE_DESC_START_PAGE)+i*sizeof(page_desc_val_t);
 				
-				//ÎÄ¼ş½áÊø
+				//æ–‡ä»¶ç»“æŸ
 				page_desc_val=PAGE_FILE_END;
 				if(fs_port_write(addr,sizeof(page_desc_val_t),(uint8_t*)&page_desc_val)
 					!=sizeof(page_desc_val_t))
@@ -416,7 +622,10 @@ static jacefs_error_t alloc_page(uint32_t req_size,uint16_t *start_page)
 					FS_LOG("write error!\r\n");
 					return FS_RET_UNKNOW_ERR;
 				}
-				
+#else
+				addr=PAGE_TO_SPACE_DESC_ADDR(SPACE_DESC_START_PAGE)+i;
+				m_space_desc_cache[addr]=PAGE_FILE_END;
+#endif
 				break;
 			}
 			
@@ -429,13 +638,18 @@ static jacefs_error_t alloc_page(uint32_t req_size,uint16_t *start_page)
         FS_TOTAL_SIZE-m_fs_remainig_size,(FS_TOTAL_SIZE-m_fs_remainig_size)/1024,
 		req_size,alloc_size,*start_page);
     
+    //å¦‚æœä½¿ç”¨RAMç¼“å­˜ï¼ŒRAMæ•°æ®åŒæ­¥åˆ°flash
+#if FS_USE_RAM_CACHE
+    m_fs_sync|=FS_SYNC_SPACE_DESC;
+#endif
+
     return FS_RET_SUCCESS;
 }
 /**
-@brief : »ØÊÕ¿Õ¼ä
+@brief : å›æ”¶ç©ºé—´
 		
 @param : 
--start_page	»ØÊÕµÄÆğÊ¼Ò³
+-start_page	å›æ”¶çš„èµ·å§‹é¡µ
 
 @retval:
 - @jacefs_error_t
@@ -447,6 +661,7 @@ static jacefs_error_t free_page(uint16_t start_page)
         return FS_RET_NOT_READY;
     }
 
+#if !FS_USE_RAM_CACHE
     uint32_t space_desc_addr,
 			space_desc_next_addr;
 	uint16_t page,next_page;
@@ -462,7 +677,7 @@ static jacefs_error_t free_page(uint16_t start_page)
 		
 		FS_LOG("page=%d,space_desc_addr=%x!\r\n",next_page,space_desc_addr);
 		
-		//¶ÁÈ¡Ò»ÕûÒ³
+		//è¯»å–ä¸€æ•´é¡µ
 		if(fs_port_read( space_desc_addr,FS_PAGE_SIZE,m_swap_buf)
 				!=FS_PAGE_SIZE )
 		{
@@ -470,7 +685,7 @@ static jacefs_error_t free_page(uint16_t start_page)
 			return FS_RET_UNKNOW_ERR;
 		}
 		
-		//»ØÊÕ¿Õ¼äÃèÊöÒ³µÚÒ»¸ö ¿Õ¼ä
+		//å›æ”¶ç©ºé—´æè¿°é¡µç¬¬ä¸€ä¸ª ç©ºé—´
 		offset_in_page=(next_page*SPACE_BYTE_PER_PAGE)%(FS_PAGE_SIZE);
 		val=(page_desc_val_t*)&m_swap_buf[offset_in_page];
 		
@@ -484,7 +699,7 @@ static jacefs_error_t free_page(uint16_t start_page)
 		FS_INFO("next free page=%d\r\n",
 			next_page);
 		
-		//»ØÊÕÍ¬Ò»¿Õ¼äÃèÊöÒ³Ê£Óà ¿Õ¼ä
+		//å›æ”¶åŒä¸€ç©ºé—´æè¿°é¡µå‰©ä½™ ç©ºé—´
 free_page_rem:
 		if(next_page!=PAGE_FILE_END)
 		{
@@ -509,14 +724,14 @@ free_page_rem:
 				goto free_page_rem;
 			}
 			
-			//²Á³ıÔ­Ò³
+			//æ“¦é™¤åŸé¡µ
 			page=(space_desc_addr-FS_HW_START_ADDR)/FS_PAGE_SIZE;
 			if(fs_port_control(FS_CTL_ERASE_PAGE,&page)!=FS_RET_SUCCESS)
 			{
 				return FS_RET_UNKNOW_ERR;
 			}
 			
-			//Ğ´ÈëĞÂÊı¾İ
+			//å†™å…¥æ–°æ•°æ®
 			if(fs_port_write( space_desc_addr,FS_PAGE_SIZE,m_swap_buf)
 				!=FS_PAGE_SIZE )
 			{
@@ -524,18 +739,18 @@ free_page_rem:
 				return FS_RET_UNKNOW_ERR;
 			}
 			
-			//¶ÁÈ¡ÏÂÒ»Ãæ¿Õ¼äÃèÊöÒ³
+			//è¯»å–ä¸‹ä¸€é¢ç©ºé—´æè¿°é¡µ
 			continue;
 		}
 		
-		//²Á³ıÔ­Ò³
+		//æ“¦é™¤åŸé¡µ
 		page=(space_desc_addr-FS_HW_START_ADDR)/FS_PAGE_SIZE;
 		if(fs_port_control(FS_CTL_ERASE_PAGE,&page)!=FS_RET_SUCCESS)
 		{
 			return FS_RET_UNKNOW_ERR;
 		}
 		
-		//Ğ´ÈëĞÂÊı¾İ
+		//å†™å…¥æ–°æ•°æ®
 		if(fs_port_write(space_desc_addr,FS_PAGE_SIZE,m_swap_buf)
 				!=FS_PAGE_SIZE )
 		{
@@ -543,13 +758,43 @@ free_page_rem:
 			return FS_RET_UNKNOW_ERR;
 		}
 		
-		//µ½´Ë¿Õ¼ä»ØÊÕÍê³É
+		//åˆ°æ­¤ç©ºé—´å›æ”¶å®Œæˆ
 		break;
 		
 		
     }
 	while(1);
-    
+#else
+	uint16_t next_page;
+	uint32_t addr;
+
+	next_page=start_page;
+    do
+    {
+        addr=PAGE_TO_SPACE_DESC_ADDR(SPACE_DESC_START_PAGE)+next_page;
+
+        FS_LOG("free page=%d,",next_page);
+
+        next_page=m_space_desc_cache[addr];
+
+        FS_INFO("next free page=%d\r\n",next_page);
+
+        m_space_desc_cache[addr]=PAGE_NOT_USED;
+        m_fs_remainig_size+=FS_PAGE_SIZE;
+        if(next_page==PAGE_FILE_END)
+        {
+            break;
+        }
+
+    }while(1);
+
+    //å¦‚æœä½¿ç”¨RAMç¼“å­˜ï¼ŒRAMæ•°æ®åŒæ­¥åˆ°flash
+#if FS_USE_RAM_CACHE
+    m_fs_sync|=FS_SYNC_SPACE_DESC;
+#endif
+
+#endif
+
     FS_LOG("free space finish,remaining size=%d(%d KB),used=%d(%d KB),start_page=%d\r\n",
         m_fs_remainig_size,m_fs_remainig_size/1024,
         FS_TOTAL_SIZE-m_fs_remainig_size,(FS_TOTAL_SIZE-m_fs_remainig_size)/1024,
@@ -558,24 +803,29 @@ free_page_rem:
     return FS_RET_SUCCESS;
 }
 /**
-@brief : ¼ì²éÎÄ¼şÊÇ·ñ´æÔÚ
+@brief : æ£€æŸ¥æ–‡ä»¶æ˜¯å¦å­˜åœ¨
 		
 @param : 
--file_id 	²éÕÒµÄÎÄ¼şID
--app_id		²éÕÒµÄAPP ID
+-file_id 	æŸ¥æ‰¾çš„æ–‡ä»¶ID
+-app_id		æŸ¥æ‰¾çš„APP ID
 
 @retval:
-- true ÎÄ¼ş´æÔÚ
-- false ÎÄ¼ş²»´æÔÚ
+- true æ–‡ä»¶å­˜åœ¨
+- false æ–‡ä»¶ä¸å­˜åœ¨
 */
 static bool file_exist(jacefs_file_id_t file_id,uint16_t app_id)
 {
+#if !FS_USE_RAM_CACHE
     jacefs_fd_hdr_t fd_hdr;
+#else
+    jacefs_fd_hdr_t *fd_hdr;
+#endif
+
     jacefs_fd_t *fd;
     uint32_t page,next_page;
 	
     
-	next_page=0;
+	next_page=FILE_DESC_START_PAGE-SPACE_DESC_START_PAGE;
 	page=0;
 	
 	while(1)
@@ -586,6 +836,7 @@ static bool file_exist(jacefs_file_id_t file_id,uint16_t app_id)
 			break;
 		next_page=page+1;
 		
+#if !FS_USE_RAM_CACHE
 		if(fs_port_read( PAGE_TO_ADDR(page),
 			sizeof(jacefs_fd_hdr_t),(uint8_t*)&fd_hdr)!=sizeof(jacefs_fd_hdr_t))
 		{
@@ -597,7 +848,7 @@ static bool file_exist(jacefs_file_id_t file_id,uint16_t app_id)
 			continue;
 		
 		
-		//°ÑÎÄ¼şÃèÊö ¸´ÖÆµ½½»»»Çø£¨ÄÚ´æ£©
+		//æŠŠæ–‡ä»¶æè¿° å¤åˆ¶åˆ°äº¤æ¢åŒºï¼ˆå†…å­˜ï¼‰
 		if(fs_port_read( PAGE_TO_ADDR(page)+sizeof(jacefs_fd_hdr_t),
 			fd_hdr.file_num*sizeof(jacefs_fd_t),m_swap_buf) 
 				!=fd_hdr.file_num*sizeof(jacefs_fd_t) )
@@ -617,6 +868,25 @@ static bool file_exist(jacefs_file_id_t file_id,uint16_t app_id)
 				return true;
 			}
 		}
+#else
+
+		fd_hdr=(jacefs_fd_hdr_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)];
+
+        if(fd_hdr->file_num==0 || fd_hdr->file_num>FILE_DESC_PER_PAGE)
+            continue;
+
+        fd=(jacefs_fd_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)+sizeof(jacefs_fd_hdr_t)];
+
+        for(uint16_t i=0;i<fd_hdr->file_num;i++ )
+        {
+            if(fd[i].id==file_id && fd[i].app_id==app_id)
+            {
+                FS_LOG("found file=%d,app_id=%d in page=%d num=%d!\r\n",
+                    file_id,app_id,page,i);
+                return true;
+            }
+        }
+#endif
 		
 	}
 	
@@ -625,23 +895,27 @@ static bool file_exist(jacefs_file_id_t file_id,uint16_t app_id)
 }
 
 /**
-@brief : »ñÈ¡ÎÄ¼şÃèÊö
+@brief : è·å–æ–‡ä»¶æè¿°
 		
 @param : 
--file_id 	²éÕÒµÄÎÄ¼şID
--app_id		²éÕÒµÄAPP ID
--fd			·µ»Ø²éÕÒµ½µÄÎÄ¼şÃèÊö
+-file_id 	æŸ¥æ‰¾çš„æ–‡ä»¶ID
+-app_id		æŸ¥æ‰¾çš„APP ID
+-fd			è¿”å›æŸ¥æ‰¾åˆ°çš„æ–‡ä»¶æè¿°
 
 @retval:
 - @jacefs_error_t
 */
 static jacefs_error_t get_file_desc(jacefs_file_id_t file_id,uint16_t app_id,jacefs_fd_t *fd)
 {
+#if !FS_USE_RAM_CACHE
     jacefs_fd_hdr_t fd_hdr;
+#else
+    jacefs_fd_hdr_t *fd_hdr;
+#endif
     uint32_t page,next_page;
 	jacefs_fd_t *search_fd;
 	
-	next_page=0;
+	next_page=FILE_DESC_START_PAGE-SPACE_DESC_START_PAGE;
 	page=0;
 	
 	while(1)
@@ -652,6 +926,7 @@ static jacefs_error_t get_file_desc(jacefs_file_id_t file_id,uint16_t app_id,jac
 			break;
 		next_page=page+1;
 		
+#if !FS_USE_RAM_CACHE
 		if(fs_port_read( PAGE_TO_ADDR(page),
 			sizeof(jacefs_fd_hdr_t),(uint8_t*)&fd_hdr)!=sizeof(jacefs_fd_hdr_t))
 		{
@@ -663,7 +938,7 @@ static jacefs_error_t get_file_desc(jacefs_file_id_t file_id,uint16_t app_id,jac
 			continue;
 		
 		
-		//°ÑÎÄ¼şÃèÊö ¸´ÖÆµ½½»»»Çø£¨ÄÚ´æ£©
+		//æŠŠæ–‡ä»¶æè¿° å¤åˆ¶åˆ°äº¤æ¢åŒºï¼ˆå†…å­˜ï¼‰
 		if(fs_port_read( PAGE_TO_ADDR(page)+sizeof(jacefs_fd_hdr_t),
 			fd_hdr.file_num*sizeof(jacefs_fd_t),m_swap_buf) 
 				!=fd_hdr.file_num*sizeof(jacefs_fd_t) )
@@ -686,6 +961,27 @@ static jacefs_error_t get_file_desc(jacefs_file_id_t file_id,uint16_t app_id,jac
 				return FS_RET_SUCCESS;
 			}
 		}
+#else
+		fd_hdr=(jacefs_fd_hdr_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)];
+
+        if(fd_hdr->file_num==0 || fd_hdr->file_num>FILE_DESC_PER_PAGE)
+            continue;
+
+        search_fd=(jacefs_fd_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)+sizeof(jacefs_fd_hdr_t)];
+
+        for(uint16_t i=0;i<fd_hdr->file_num;i++ )
+        {
+            if(search_fd[i].id==file_id && search_fd[i].app_id==app_id)
+            {
+                if(fd)
+                    *fd=search_fd[i];
+
+                FS_LOG("found file=%d,app_id=%d in page=%d num=%d!\r\n",
+                    file_id,app_id,page,i);
+                return FS_RET_SUCCESS;
+            }
+        }
+#endif
 	}
 	
 	FS_LOG("not found file=%d,app_id=%d !\r\n",file_id,app_id);
@@ -693,23 +989,27 @@ static jacefs_error_t get_file_desc(jacefs_file_id_t file_id,uint16_t app_id,jac
 }
 
 /**
-@brief : ĞŞ¸ÄÎÄ¼şÃèÊö
+@brief : ä¿®æ”¹æ–‡ä»¶æè¿°
 		
 @param : 
--file_id 	ÎÄ¼ş¶ÔÓ¦ID
--app_id		ÎÄ¼ş¶ÔÓ¦APP ID
--fd			·µ»Ø¶ÔÓ¦µÄÎÄ¼şÃèÊö
+-file_id 	æ–‡ä»¶å¯¹åº”ID
+-app_id		æ–‡ä»¶å¯¹åº”APP ID
+-fd			è¿”å›å¯¹åº”çš„æ–‡ä»¶æè¿°
 
 @retval:
 - @jacefs_error_t
 */
 static jacefs_error_t set_file_desc(jacefs_fd_t fd)
 {
+#if !FS_USE_RAM_CACHE
     jacefs_fd_hdr_t fd_hdr;
+#else
+    jacefs_fd_hdr_t *fd_hdr;
+#endif
     uint32_t page,next_page;
 	jacefs_fd_t *search_fd;
 	
-	next_page=0;
+	next_page=FILE_DESC_START_PAGE-SPACE_DESC_START_PAGE;
 	page=0;
 	
 	while(1)
@@ -720,6 +1020,7 @@ static jacefs_error_t set_file_desc(jacefs_fd_t fd)
 			break;
 		next_page=page+1;
 		
+#if !FS_USE_RAM_CACHE
 		if(fs_port_read( PAGE_TO_ADDR(page),
 			sizeof(jacefs_fd_hdr_t),(uint8_t*)&fd_hdr)!=sizeof(jacefs_fd_hdr_t))
 		{
@@ -746,15 +1047,15 @@ static jacefs_error_t set_file_desc(jacefs_fd_t fd)
 			{
 				search_fd[i]=fd;
 				
-				FS_LOG("found & set file=%d,app_id=%d,ws=%d,s=%d,start_page=%d in page=%d num=%d,!\r\n",
+				FS_LOG("found & set file=%d,app_id=%d,start_page=%d ,ws=%d ,ts=%d in page=%d num=%d,!\r\n",
 					fd.id,fd.app_id,fd.start_page,fd.wsize,fd.size,page,i);
 				
-				//ÖØĞÂ¼ìÑé£¬»ØĞ´
+				//é‡æ–°æ£€éªŒï¼Œå›å†™
 				fd_hdr.crc16=crc16_compute((uint8_t*)&fd_hdr.file_num,sizeof(jacefs_fd_hdr_t)-2,0);
 				fd_hdr.crc16=crc16_compute(m_swap_buf,
 							fd_hdr.file_num*sizeof(jacefs_fd_t),&fd_hdr.crc16);
 				
-				//°ÑÎÄ¼şÃèÊö´Ó½»»»Çø£¨ÄÚ´æ£©»ØĞ´
+				//æŠŠæ–‡ä»¶æè¿°ä»äº¤æ¢åŒºï¼ˆå†…å­˜ï¼‰å›å†™
 				if(fs_port_control(FS_CTL_ERASE_PAGE,&page)!=FS_RET_SUCCESS)
 				{
 					return FS_RET_UNKNOW_ERR;
@@ -781,6 +1082,36 @@ static jacefs_error_t set_file_desc(jacefs_fd_t fd)
 				return FS_RET_SUCCESS;
 			}
 		}
+#else
+		fd_hdr=(jacefs_fd_hdr_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)];
+
+        if(fd_hdr->file_num==0 || fd_hdr->file_num>FILE_DESC_PER_PAGE)
+            continue;
+
+        search_fd=(jacefs_fd_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)+sizeof(jacefs_fd_hdr_t)];
+
+        for(uint16_t i=0;i<fd_hdr->file_num;i++ )
+        {
+            if(search_fd[i].id==fd.id && search_fd[i].app_id==fd.app_id)
+            {
+                //æ›´æ–°ç¼“å­˜
+                search_fd[i]=fd;
+
+                FS_LOG("found & set file=%d,app_id=%d,start_page=%d ,ws=%d ,ts=%d in page=%d num=%d,!\r\n",
+                    fd.id,fd.app_id,fd.start_page,fd.wsize,fd.size,page,i);
+
+                //é‡æ–°æ£€éªŒ
+                fd_hdr->crc16=crc16_compute((uint8_t*)&fd_hdr->file_num,
+                    sizeof(jacefs_fd_hdr_t)-2+fd_hdr->file_num*sizeof(jacefs_fd_t),0);
+
+                //å¦‚æœä½¿ç”¨RAMç¼“å­˜ï¼ŒRAMæ•°æ®åŒæ­¥åˆ°flash
+                m_fs_sync|=FS_SYNC_FILE_DESC;
+
+
+                return FS_RET_SUCCESS;
+            }
+        }
+#endif
 	}
 	
 	FS_LOG("not found file=%d,app_id=%d !\r\n",fd.id,fd.app_id);
@@ -788,24 +1119,31 @@ static jacefs_error_t set_file_desc(jacefs_fd_t fd)
 }
 
 /**
-@brief : É¾³ıÎÄ¼şÃèÊö
+@brief : åˆ é™¤æ–‡ä»¶æè¿°
 		
 @param : 
--file_id 	É¾³ıµÄÎÄ¼ş¶ÔÓ¦ID
--app_id		É¾³ıµÄÎÄ¼ş¶ÔÓ¦APP ID
--fd			·µ»Ø¶ÔÓ¦µÄÎÄ¼şÃèÊö
--use_file_id	trueÎªÊ¹ÓÃfile_id£¬falseÎªÖ»Ê¹ÓÃapp_id--¼´É¾ÈÎÒ»ºÍapp_idÏàÍ¬µÄÎÄ¼ş
+-file_id 	åˆ é™¤çš„æ–‡ä»¶å¯¹åº”ID
+-app_id		åˆ é™¤çš„æ–‡ä»¶å¯¹åº”APP ID
+-fd			è¿”å›å¯¹åº”çš„æ–‡ä»¶æè¿°
+-delete_any_file	 trueä¸ºä½¿ç”¨åˆ é™¤ä»»æ„ä¸€ä¸ªæ–‡ä»¶ï¼ˆå³åˆ ä»»ä¸€å’Œapp_idç›¸åŒçš„æ–‡ä»¶ï¼‰ï¼Œfalseä¸ºapp_idå’Œapp_idç›¸åŒæ—¶æ‰åˆ é™¤
+-del_except_file_id  å¦‚æœdelete_any_file==trueï¼Œä¸åˆ é™¤è¿™ä¸ªæ–‡ä»¶ï¼Œ del_except_file_id==FS_INVALID_FS_ID æ—¶è¯¥æ¡ä»¶ä¸ä½¿ç”¨
 
 @retval:
 - @jacefs_error_t
 */
-static jacefs_error_t delete_file_desc(jacefs_file_id_t file_id,uint16_t app_id,jacefs_fd_t *fd,bool use_file_id)
+static jacefs_error_t delete_file_desc(jacefs_file_id_t file_id,uint16_t app_id,jacefs_fd_t *fd,
+    bool delete_any_file,
+    jacefs_file_id_t del_except_file_id)
 {
+#if !FS_USE_RAM_CACHE
     jacefs_fd_hdr_t fd_hdr;
+#else
+    jacefs_fd_hdr_t *fd_hdr;
+#endif
     uint32_t page,next_page;
 	jacefs_fd_t *search_fd;
 	
-	next_page=0;
+	next_page=FILE_DESC_START_PAGE-SPACE_DESC_START_PAGE;
 	page=0;
 	
 	while(1)
@@ -816,6 +1154,7 @@ static jacefs_error_t delete_file_desc(jacefs_file_id_t file_id,uint16_t app_id,
 			break;
 		next_page=page+1;
 		
+#if !FS_USE_RAM_CACHE
 		if(fs_port_read( PAGE_TO_ADDR(page),
 			sizeof(jacefs_fd_hdr_t),(uint8_t*)&fd_hdr)!=sizeof(jacefs_fd_hdr_t))
 		{
@@ -838,7 +1177,7 @@ static jacefs_error_t delete_file_desc(jacefs_file_id_t file_id,uint16_t app_id,
 		
 		for(uint16_t i=0;i<fd_hdr.file_num;i++ )
 		{
-			if((search_fd[i].id==file_id || !use_file_id) && search_fd[i].app_id==app_id)
+			if((search_fd[i].id==file_id || delete_any_file) && search_fd[i].app_id==app_id)
 			{
 				if(fd)
 					*fd=search_fd[i];
@@ -846,13 +1185,13 @@ static jacefs_error_t delete_file_desc(jacefs_file_id_t file_id,uint16_t app_id,
 				FS_LOG("found & delete file=%d,app_id=%d,start_page=%d in page=%d num=%d!\r\n",
 					fd->id,fd->app_id,fd->start_page,page,i);
 				
-				//É¾³ıÎÄ¼şÃèÊö£¬°ÑºóÃæµÄÎÄ¼şÃèÊöÏòÇ°ÒÆ¶¯
+				//åˆ é™¤æ–‡ä»¶æè¿°ï¼ŒæŠŠåé¢çš„æ–‡ä»¶æè¿°å‘å‰ç§»åŠ¨
 				if(i<fd_hdr.file_num-1)
 				{
 					memcpy(&search_fd[i],&search_fd[i+1],(fd_hdr.file_num-i-1)*sizeof(jacefs_fd_t));
 				}
 				
-				//ÖØĞÂ¼ìÑé£¬»ØĞ´
+				//é‡æ–°æ£€éªŒï¼Œå›å†™
 				fd_hdr.file_num--;
 				fd_hdr.crc16=crc16_compute((uint8_t*)&fd_hdr.file_num,sizeof(jacefs_fd_hdr_t)-2,0);
 				
@@ -862,7 +1201,7 @@ static jacefs_error_t delete_file_desc(jacefs_file_id_t file_id,uint16_t app_id,
 								fd_hdr.file_num*sizeof(jacefs_fd_t),&fd_hdr.crc16);
 				}
 				
-				//°ÑÎÄ¼şÃèÊö´Ó½»»»Çø£¨ÄÚ´æ£©»ØĞ´
+				//æŠŠæ–‡ä»¶æè¿°ä»äº¤æ¢åŒºï¼ˆå†…å­˜ï¼‰å›å†™
 				if(fs_port_control(FS_CTL_ERASE_PAGE,&page)!=FS_RET_SUCCESS)
 				{
 					return FS_RET_UNKNOW_ERR;
@@ -889,6 +1228,48 @@ static jacefs_error_t delete_file_desc(jacefs_file_id_t file_id,uint16_t app_id,
 				return FS_RET_SUCCESS;
 			}
 		}
+#else
+		fd_hdr=(jacefs_fd_hdr_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)];
+
+        if(fd_hdr->file_num==0 || fd_hdr->file_num>FILE_DESC_PER_PAGE)
+            continue;
+
+        search_fd=(jacefs_fd_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)+sizeof(jacefs_fd_hdr_t)];
+
+        for(uint16_t i=0;i<fd_hdr->file_num;i++ )
+        {
+            if((search_fd[i].id==file_id || delete_any_file) && search_fd[i].app_id==app_id)
+            {
+                //å¦‚æœæ˜¯åˆ é™¤ä»»ä¸€æ–‡ä»¶ï¼Œè¿‡æ»¤ä¸åˆ é™¤çš„æ–‡ä»¶
+                if(delete_any_file && del_except_file_id==search_fd[i].app_id)
+                {
+                    continue;
+                }
+
+                if(fd)
+                    *fd=search_fd[i];
+
+                FS_LOG("found & delete file=%d,app_id=%d,start_page=%d in page=%d num=%d!\r\n",
+                    fd->id,fd->app_id,fd->start_page,page,i);
+
+                //åˆ é™¤æ–‡ä»¶æè¿°ï¼ŒæŠŠåé¢çš„æ–‡ä»¶æè¿°å‘å‰ç§»åŠ¨
+                if(i<fd_hdr->file_num-1)
+                {
+                    memcpy(&search_fd[i],&search_fd[i+1],(fd_hdr->file_num-i-1)*sizeof(jacefs_fd_t));
+                }
+
+                //é‡æ–°æ£€éªŒï¼Œå›å†™
+                fd_hdr->file_num--;
+                fd_hdr->crc16=crc16_compute((uint8_t*)&fd_hdr->file_num,
+                    sizeof(jacefs_fd_hdr_t)-2+fd_hdr->file_num*sizeof(jacefs_fd_t),0);
+
+                //å¦‚æœä½¿ç”¨RAMç¼“å­˜ï¼ŒRAMæ•°æ®åŒæ­¥åˆ°flash
+                m_fs_sync|=FS_SYNC_FILE_DESC;
+
+                return FS_RET_SUCCESS;
+            }
+        }
+#endif
 	}
 	
 	FS_LOG("not found file=%d,app_id=%d !\r\n",file_id,app_id);
@@ -896,14 +1277,14 @@ static jacefs_error_t delete_file_desc(jacefs_file_id_t file_id,uint16_t app_id,
 }
 
 /**
-@brief : ³õÊ¼»¯ÎÄ¼şÏµÍ³
+@brief : åˆå§‹åŒ–æ–‡ä»¶ç³»ç»Ÿ
 
-	1 ³õÊ¼»¯Ó²¼ş½Ó¿Ú
-	2 ¼ì²é¿Õ¼äÃèÊö¿éÊÇ·ñ´æÔÚ
-	3 ¼ì²éÎÄ¼şÃèÊö¿éÊÇ·ñ´æÔÚ¡¢Ğ£ÑéÍ¨¹ı
-	4 ¼ÆËãÊ£Óà¿Õ¼ä
+	1 åˆå§‹åŒ–ç¡¬ä»¶æ¥å£
+	2 æ£€æŸ¥ç©ºé—´æè¿°å—æ˜¯å¦å­˜åœ¨
+	3 æ£€æŸ¥æ–‡ä»¶æè¿°å—æ˜¯å¦å­˜åœ¨ã€æ ¡éªŒé€šè¿‡
+	4 è®¡ç®—å‰©ä½™ç©ºé—´
 
-@param : ÎŞ
+@param : æ— 
 
 @retval:
 - @jacefs_error_t
@@ -912,19 +1293,22 @@ jacefs_error_t jacefs_init(void)
 {
     int i;
 	jacefs_error_t ret;
+
+    if(m_fs_ready==true)
+    {
+        return FS_RET_SUCCESS;
+    }
     
-//    if(m_fs_ready==true)
-//    {
-//        return FS_RET_SUCCESS;
-//    }
-    
+    fs_lock();
+
     if(fs_port_init()!=FS_RET_SUCCESS)
     {
         FS_LOG("hw init error!\r\n");
+        fs_unlock();
         return FS_RET_UNKNOW_ERR;
     }
     
-    //²é¿´ÎÄ¼şÏµÍ³¿ªÊ¼Ò³ÊÇ·ñÒÑ±êÊ¶Îª¿Õ¼ä¿é
+    //æŸ¥çœ‹æ–‡ä»¶ç³»ç»Ÿå¼€å§‹é¡µæ˜¯å¦å·²æ ‡è¯†ä¸ºç©ºé—´å—
     page_desc_val_t page_desc_val;
     for(i=0;i<SPACE_DESC_PAGE_NUM;i++)
     {
@@ -932,6 +1316,7 @@ jacefs_error_t jacefs_init(void)
             sizeof(page_desc_val_t),(uint8_t*)&page_desc_val)<=0)
         {
             FS_LOG("read error!\r\n");
+            fs_unlock();
             return FS_RET_UNKNOW_ERR;
         }
         
@@ -939,27 +1324,28 @@ jacefs_error_t jacefs_init(void)
             break;
     }
     
-    //ÏµÍ³Î´ÅäÖÃ²»ÕıÈ·£¬»Ö¸´Ä¬ÈÏ
+    //ç³»ç»Ÿæœªé…ç½®ä¸æ­£ç¡®ï¼Œæ¢å¤é»˜è®¤
     if(i<SPACE_DESC_PAGE_NUM)
     {
 fs_format:
         if(format_to_jacefs())
         {
             FS_LOG("format fs error!\r\n");
+            fs_unlock();
             return FS_RET_UNKNOW_ERR;
         }
         FS_LOG("format fs success!\r\n");
 		goto init_finish;
     }
 	
-    /* ¼ì²éÎÄ¼şÃèÊö¿éÊÇ·ñÅäÖÃÕıÈ· */
+    /* æ£€æŸ¥æ–‡ä»¶æè¿°å—æ˜¯å¦é…ç½®æ­£ç¡® */
 	jacefs_fd_hdr_t hd;
 	jacefs_fd_t fd;
 	uint16_t crc16;
 	uint32_t page,next_page;
 	
 	page=0;
-	next_page=0;
+	next_page=FILE_DESC_START_PAGE-SPACE_DESC_START_PAGE;
 	while(1)
 	{
 		page=find_file_desc_page(next_page);
@@ -972,12 +1358,13 @@ fs_format:
             sizeof(jacefs_fd_hdr_t),(uint8_t*)&hd)!=sizeof(jacefs_fd_hdr_t))
         {
             FS_LOG("read err!\r\n");
+            fs_unlock();
             return FS_RET_UNKNOW_ERR;
         }
         FS_LOG("page=%d,file_num=%d crc=%x\r\n",page,hd.file_num,hd.crc16);
         
         
-        //Ã¿Ò³´æ´¢µÄÎÄ¼şÊıµÃÔÚºÏÀí·¶Î§ÄÚ
+        //æ¯é¡µå­˜å‚¨çš„æ–‡ä»¶æ•°å¾—åœ¨åˆç†èŒƒå›´å†…
         if(hd.file_num>FILE_DESC_PER_PAGE)
         {
             FS_LOG("file num=%d err,too large! \r\n",hd.file_num);
@@ -991,6 +1378,7 @@ fs_format:
                 sizeof(jacefs_fd_t),(uint8_t*)&fd)!=sizeof(jacefs_fd_t))
             {
                 FS_LOG("read err!\r\n");
+                fs_unlock();
                 return FS_RET_UNKNOW_ERR;
             }
             
@@ -1000,31 +1388,49 @@ fs_format:
         if(hd.crc16!=crc16)
         {
             FS_LOG("file desc crc16=%x err!\r\n",crc16);
-            goto fs_format;//TODO£ºÎ£ÏÕ£¡»áµ¼ÖÂÎÄ¼şÈ«²¿¶ªÊ§£¡
+            goto fs_format;//TODOï¼šå±é™©ï¼ä¼šå¯¼è‡´æ–‡ä»¶å…¨éƒ¨ä¸¢å¤±ï¼
         }
         FS_LOG("page=%d file desc crc16 pass!\r\n",page);
 	}
     
 init_finish:
-	
-    FS_LOG("fs is ready!\r\n");
-    m_fs_ready=true;
-    
-    //¼ÆËãÏµÍ³Ê£Óà¿Õ¼ä
+
+    //å¦‚æœä½¿ç”¨RAMç¼“å­˜ï¼Œflashæ•°æ®åŒæ­¥åˆ°RAM
+#if FS_USE_RAM_CACHE
+    if(fs_port_read( PAGE_TO_ADDR(SPACE_DESC_START_PAGE),
+                sizeof(m_info_cache),m_info_cache)!=sizeof(m_info_cache))
+    {
+        FS_LOG("read err!\r\n");
+        fs_unlock();
+        return FS_RET_UNKNOW_ERR;
+    }
+    if(fs_sync_timer_init()!=FS_RET_SUCCESS)
+    {
+        fs_unlock();
+        return FS_RET_UNKNOW_ERR;
+    }
+#endif
+
+    //è®¡ç®—ç³»ç»Ÿå‰©ä½™ç©ºé—´
     ret=calculate_remaining_size();
     if(ret!=FS_RET_SUCCESS)
     {
         FS_LOG("calc size err!\r\n");
+        fs_unlock();
         return ret;
     }
     
+    FS_LOG("fs is ready!\r\n");
+    m_fs_ready=true;
+
+    fs_unlock();
     return FS_RET_SUCCESS;
 }
 
 /**
-@brief : ÎÄ¼ş´´½¨
+@brief : æ–‡ä»¶åˆ›å»º
 		
-@param : ÎŞ
+@param : æ— 
 
 @retval:
 - @jacefs_error_t
@@ -1042,26 +1448,35 @@ jacefs_error_t jacefs_create(jacefs_file_id_t *file_id,int size,uint16_t app_id)
         return FS_RET_NO_ENOUGH_SPACE;
     }
     
-    if(!file_id || size<=0)
+    if(!file_id || size<=0 || *file_id==FS_INVALID_FS_ID)
     {
         return FS_RET_PARAM_ERR;
     }
 	
     FS_LOG("try to create file_id=%d,app_id=%d,size=%d !\r\n",*file_id,app_id,size);
 	
-    //¼ì²éÏµÍ³ÊÇ·ñÒÑ´æÔÚ¸ÃÎÄ¼ş
+    fs_lock();
+
+    //æ£€æŸ¥ç³»ç»Ÿæ˜¯å¦å·²å­˜åœ¨è¯¥æ–‡ä»¶
 	if(file_exist(*file_id,app_id))
 	{
+	    fs_unlock();
 		return FS_RET_FILE_EXIST;
 	}
 	
-	//´´½¨ÎÄ¼ş£¬·ÖÅä¿Õ¼ä
+	//åˆ›å»ºæ–‡ä»¶ï¼Œåˆ†é…ç©ºé—´
+#if !FS_USE_RAM_CACHE
     jacefs_fd_hdr_t fd_hdr;
     jacefs_fd_t fd;
+#else
+    jacefs_fd_hdr_t *fd_hdr;
+    jacefs_fd_t *fd;
+#endif
+
     uint32_t page,next_page;
 	jacefs_error_t ret;
     
-	next_page=0;
+	next_page=FILE_DESC_START_PAGE-SPACE_DESC_START_PAGE;
 	ret=FS_RET_SUCCESS;
 	
 	while(1)
@@ -1072,10 +1487,12 @@ jacefs_error_t jacefs_create(jacefs_file_id_t *file_id,int size,uint16_t app_id)
 			break;
 		next_page=page+1;
 		
+#if !FS_USE_RAM_CACHE
 		if(fs_port_read( PAGE_TO_ADDR(page),
 			sizeof(jacefs_fd_hdr_t),(uint8_t*)&fd_hdr)!=sizeof(jacefs_fd_hdr_t))
 		{
 			FS_LOG("read err!\r\n");
+			fs_unlock();
 			return FS_RET_UNKNOW_ERR;
 		}
 		FS_LOG("file_num=%d crc=%x\r\n",fd_hdr.file_num,fd_hdr.crc16);
@@ -1087,24 +1504,26 @@ jacefs_error_t jacefs_create(jacefs_file_id_t *file_id,int size,uint16_t app_id)
 			continue;
 		}
 		
-		//°ÑÎÄ¼şÃèÊö ¸´ÖÆµ½½»»»Çø£¨ÄÚ´æ£©
+		//æŠŠæ–‡ä»¶æè¿° å¤åˆ¶åˆ°äº¤æ¢åŒºï¼ˆå†…å­˜ï¼‰
 		if(fs_port_read( PAGE_TO_ADDR(page),
 			sizeof(jacefs_fd_hdr_t)+fd_hdr.file_num*sizeof(jacefs_fd_t),m_swap_buf) 
 				!=sizeof(jacefs_fd_hdr_t)+fd_hdr.file_num*sizeof(jacefs_fd_t) )
 		{
 			FS_LOG("read err!\r\n");
+			fs_unlock();
 			return FS_RET_UNKNOW_ERR;
 		}
 		
-		//ĞÂµÄÎÄ¼ş
+		//æ–°çš„æ–‡ä»¶
 		memset(&fd,0,sizeof(fd));
 		fd.app_id=app_id;
-		fd.id=*file_id;          //TODO£º°´APPÒÑÓĞÎÄ¼şÊıÒÀ´ÎÔö¼Ó
+		fd.id=*file_id;          //TODOï¼šæŒ‰APPå·²æœ‰æ–‡ä»¶æ•°ä¾æ¬¡å¢åŠ 
 		fd.size=size;
 		fd.wsize=0;
 		if(alloc_page(size,&fd.start_page)!=FS_RET_SUCCESS)
 		{
 			FS_LOG("alloc page error!\r\n");
+			fs_unlock();
             return FS_RET_UNKNOW_ERR;
 		}
 		memcpy(&m_swap_buf[sizeof(jacefs_fd_hdr_t)+fd_hdr.file_num*sizeof(jacefs_fd_t)],&fd,sizeof(fd));
@@ -1116,9 +1535,10 @@ jacefs_error_t jacefs_create(jacefs_file_id_t *file_id,int size,uint16_t app_id)
 		fd_hdr.crc16=crc16_compute(&m_swap_buf[sizeof(jacefs_fd_hdr_t)],
 						fd_hdr.file_num*sizeof(jacefs_fd_t),&fd_hdr.crc16);
 		
-		//°ÑÎÄ¼şÃèÊö´Ó½»»»Çø£¨ÄÚ´æ£©»ØĞ´
+		//æŠŠæ–‡ä»¶æè¿°ä»äº¤æ¢åŒºï¼ˆå†…å­˜ï¼‰å›å†™
 		if(fs_port_control(FS_CTL_ERASE_PAGE,&page)!=FS_RET_SUCCESS)
 		{
+		    fs_unlock();
 			return FS_RET_UNKNOW_ERR;
 		}
 		
@@ -1127,17 +1547,56 @@ jacefs_error_t jacefs_create(jacefs_file_id_t *file_id,int size,uint16_t app_id)
 			!=sizeof(jacefs_fd_hdr_t)+fd_hdr.file_num*sizeof(jacefs_fd_t))
 		{
 			FS_LOG("write err!\r\n");
+			fs_unlock();
 			return FS_RET_UNKNOW_ERR;
 		}
+#else
+        fd_hdr=(jacefs_fd_hdr_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)];
+        FS_LOG("file_num=%d crc=%x\r\n",fd_hdr->file_num,fd_hdr->crc16);
+
+        if(fd_hdr->file_num>=FILE_DESC_PER_PAGE )
+        {
+            FS_LOG("page=%d,file num=%d ,overflow !\r\n",page,fd_hdr->file_num);
+            ret= FS_RET_NO_ENOUGH_FILE;
+            continue;
+        }
+
+        fd=(jacefs_fd_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)
+                                             +sizeof(jacefs_fd_hdr_t)+sizeof(jacefs_fd_t)*fd_hdr->file_num];
+
+        //æ–°çš„æ–‡ä»¶
+        memset(fd,0,sizeof(jacefs_fd_t));
+        fd->app_id=app_id;
+        fd->id=*file_id;          //TODOï¼šæŒ‰APPå·²æœ‰æ–‡ä»¶æ•°ä¾æ¬¡å¢åŠ 
+        fd->size=size;
+        fd->wsize=0;
+        if(alloc_page(size,&fd->start_page)!=FS_RET_SUCCESS)
+        {
+            FS_LOG("alloc page error!\r\n");
+            fs_unlock();
+            return FS_RET_UNKNOW_ERR;
+        }
+
+        fd_hdr->file_num++;
+
+        fd_hdr->crc16=crc16_compute((uint8_t*)&fd_hdr->file_num,
+            sizeof(jacefs_fd_hdr_t)-2+fd_hdr->file_num*sizeof(jacefs_fd_t),0);
+
+        //å¦‚æœä½¿ç”¨RAMç¼“å­˜ï¼ŒRAMæ•°æ®åŒæ­¥åˆ°flash
+        m_fs_sync|=FS_SYNC_ALL;
+
+#endif
+
 		break;
 	}
     
+	fs_unlock();
     return ret;
 }
 
 
 /**
-@brief : É¾³ıÎÄ¼ş
+@brief : åˆ é™¤æ–‡ä»¶
 		
 @param : 
 -file_id 
@@ -1157,28 +1616,33 @@ jacefs_error_t jacefs_delete(jacefs_file_id_t file_id,uint16_t app_id)
 	
 	jacefs_fd_t fd;
 	
-    //É¾³ıÎÄ¼ş ÃèÊö
-	if(delete_file_desc(file_id,app_id,&fd,true)!=FS_RET_SUCCESS)
+	fs_lock();
+
+    //åˆ é™¤æ–‡ä»¶ æè¿°
+	if(delete_file_desc(file_id,app_id,&fd,false,FS_INVALID_FS_ID)!=FS_RET_SUCCESS)
 	{
+	    fs_unlock();
 		return FS_RET_FILE_NOT_EXIST;
 	}
 	
-	//ÊÍ·Å¿Õ¼ä
+	//é‡Šæ”¾ç©ºé—´
 	free_page(fd.start_page);
 	
+	fs_unlock();
     return FS_RET_SUCCESS;
 }
 
 /**
-@brief : É¾³ıÎÄ¼ş£¬Í¬Ò»¸öAPP IDµÄÎÄ¼ş¶¼É¾³ı£¬ÓÃÓÚAPPĞ¶ÔØÊ±Ê¹ÓÃ
+@brief : åˆ é™¤æ–‡ä»¶ï¼ŒåŒä¸€ä¸ªAPP IDçš„æ–‡ä»¶éƒ½åˆ é™¤ï¼Œç”¨äºAPPå¸è½½æ—¶ä½¿ç”¨
 		
 @param : 
--app_id 
+-app_id         è¦åˆ é™¤çš„æ–‡ä»¶å¯¹åº”APP ID
+-except_file_id è¦ä¿ç•™çš„æ–‡ä»¶ï¼ˆåˆ é™¤è¯¥APPçš„æ‰€æœ‰æ–‡ä»¶é™¤äº†è¿™ä¸ªæ–‡ä»¶ï¼‰
 
 @retval:
 - @jacefs_error_t
 */
-jacefs_error_t jacefs_delete_by_appid(uint16_t app_id)
+jacefs_error_t jacefs_delete_all(uint16_t app_id,jacefs_file_id_t except_file_id)
 {
 	if(m_fs_ready!=true)
     {
@@ -1189,32 +1653,92 @@ jacefs_error_t jacefs_delete_by_appid(uint16_t app_id)
 	
 	jacefs_fd_t fd;
 	
+	fs_lock();
+
 	do{
-		//É¾³ıÎÄ¼ş ÃèÊö
-		if(delete_file_desc(0,app_id,&fd,false)!=FS_RET_SUCCESS)
+		//åˆ é™¤æ–‡ä»¶ æè¿°
+		if(delete_file_desc(0,app_id,&fd,true,except_file_id)!=FS_RET_SUCCESS)
 		{
 			break;
 		}
 		
-		//ÊÍ·Å¿Õ¼ä
+		//é‡Šæ”¾ç©ºé—´
 		free_page(fd.start_page);
 	}while(1);
 	
+	fs_unlock();
     return FS_RET_SUCCESS;
 }
 
 /**
-@brief : ÎÄ¼ş×·¼ÓÊı¾İ
+@brief : é‡æ–°æ ¼å¼åŒ–æ–‡ä»¶ç³»ç»Ÿ
+
+@param :
+-app_id
+
+@retval:
+- @jacefs_error_t
+*/
+jacefs_error_t jacefs_clean_all(void)
+{
+    if(m_fs_ready!=true)
+    {
+        return FS_RET_NOT_READY;
+    }
+
+    FS_LOG("delete all files !\r\n");
+
+    jacefs_error_t ret;
+    fs_lock();
+
+    if(format_to_jacefs())
+    {
+        FS_LOG("format fs error!\r\n");
+        fs_unlock();
+        return FS_RET_UNKNOW_ERR;
+    }
+    FS_LOG("format fs success!\r\n");
+
+    //å¦‚æœä½¿ç”¨RAMç¼“å­˜ï¼Œflashæ•°æ®åŒæ­¥åˆ°RAM
+#if FS_USE_RAM_CACHE
+    m_fs_sync=FS_SYNC_NONE;
+    if(fs_port_read( PAGE_TO_ADDR(SPACE_DESC_START_PAGE),
+                sizeof(m_info_cache),m_info_cache)!=sizeof(m_info_cache))
+    {
+        FS_LOG("read err!\r\n");
+        fs_unlock();
+        return FS_RET_UNKNOW_ERR;
+    }
+#endif
+
+    //è®¡ç®—ç³»ç»Ÿå‰©ä½™ç©ºé—´
+    ret=calculate_remaining_size();
+    if(ret!=FS_RET_SUCCESS)
+    {
+        FS_LOG("calc size err!\r\n");
+        fs_unlock();
+        return ret;
+    }
+
+    FS_LOG("fs is ready!\r\n");
+//    m_fs_ready=true;
+
+    fs_unlock();
+    return FS_RET_SUCCESS;
+}
+
+/**
+@brief : æ–‡ä»¶è¿½åŠ æ•°æ®
 		
 @param : 
 -file_id
 -app_id 
--dat 		Êı¾İ
--size		×Ö½Ú
+-dat 		æ•°æ®
+-size		å­—èŠ‚
 
 @retval:
-- <0£¬@jacefs_error_t
-- >0£¬Ğ´ÈëÊı¾İ´óĞ¡£¬×Ö½Ú
+- <0ï¼Œ@jacefs_error_t
+- >0ï¼Œå†™å…¥æ•°æ®å¤§å°ï¼Œå­—èŠ‚
 */
 int jacefs_append(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size)
 {
@@ -1229,8 +1753,12 @@ int jacefs_append(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size
     }
 	
 	jacefs_fd_t fd;
+
+	fs_lock();
+
 	if(get_file_desc(file_id,app_id,&fd)!=FS_RET_SUCCESS)
 	{
+	    fs_unlock();
 		return FS_RET_FILE_NOT_EXIST;
 	}
 	
@@ -1240,10 +1768,11 @@ int jacefs_append(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size
 	if(fd.wsize+size > fd.size)
 	{
 		FS_LOG("over size=%d\r\n",fd.wsize+size);
+		fs_unlock();
 		return FS_RET_FILE_OVER_SIZE;
 	}
 	
-	//ÎÄ¼şĞ´Èë
+	//æ–‡ä»¶å†™å…¥
 	uint32_t off_page,
 			 off_bytes_in_page;
 	uint32_t addr;
@@ -1252,17 +1781,19 @@ int jacefs_append(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size
 	remaining_size=size;
 	already_write=0;
 	
+	//æ‰¾åˆ°æœ¬æ¬¡å†™å…¥çš„æ•°æ®å¼€å§‹é¡µ
+	off_page=fd.start_page;
+    if(fd.wsize>=FS_PAGE_SIZE)
+    {
+        //ç”±äºæ–‡ä»¶å­˜å‚¨ä¸è¿ç»­ã€‚æ‰€ä»¥æœ¬æ¬¡è¯»å–çš„é¦–é¡µå¾—ä»æ–‡ä»¶é¦–é¡µé¡ºåºæŸ¥æ‰¾
+        for(int i=0;i<fd.wsize/FS_PAGE_SIZE;i++)
+            off_page=get_file_next_page(off_page);
+    }
+    off_bytes_in_page=fd.wsize%FS_PAGE_SIZE;
+
+    FS_LOG("write page=%d\r\n",off_page);
+
 	do{
-		off_page=fd.start_page;
-		if(fd.wsize>=FS_PAGE_SIZE)
-		{
-			for(int i=0;i<fd.wsize/FS_PAGE_SIZE;i++)
-				off_page=get_file_next_page(off_page);
-		}
-		FS_LOG("write page=%d\r\n",off_page);
-		
-		off_bytes_in_page=fd.wsize%FS_PAGE_SIZE;
-		
 		wsize=FS_PAGE_SIZE-off_bytes_in_page;
 		if(wsize>=remaining_size)
 		{
@@ -1274,18 +1805,21 @@ int jacefs_append(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size
 			if(fs_port_control(FS_CTL_ERASE_PAGE,&off_page)!=FS_RET_SUCCESS)
 			{
 				FS_LOG("erase page=%d error!\r\n",off_page);
+				fs_unlock();
 				return FS_RET_UNKNOW_ERR;
 			}
 		}
 		else
 		{
-			//TODO: Èç¹û off_bytes_in_page ²»Îª0£¬Ó¦¸Ã°ÑÄÚÈİ¶Á³ö£¬ÔÙ²Á³ı£¬²ÅÄÜÔÙĞ´Èë
+			//TODO: å¦‚æœ off_bytes_in_page ä¸ä¸º0ï¼Œåº”è¯¥æŠŠå†…å®¹è¯»å‡ºï¼Œå†æ“¦é™¤ï¼Œæ‰èƒ½å†å†™å…¥
 		}
 		
+		//å†™å…¥æ•°æ®
 		addr=PAGE_TO_ADDR(off_page)+off_bytes_in_page;
 		if(fs_port_write(addr,wsize,&dat[already_write])!=wsize)
 		{
 			FS_LOG("write add=%x error!\r\n",addr);
+			fs_unlock();
 			return FS_RET_UNKNOW_ERR;
 		}
 		
@@ -1295,30 +1829,42 @@ int jacefs_append(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size
 		
 		FS_LOG("write size=%d,remain=%d \r\n",wsize,remaining_size);
 		
-	}while(remaining_size>0);
+		if(remaining_size>0)
+        {
+            off_page=get_file_next_page(off_page);
+            off_bytes_in_page=fd.wsize%FS_PAGE_SIZE;
+            FS_LOG("read page=%d\r\n",off_page);
+        }
+        else
+        {
+            break;
+        }
+
+	}while(1);
 	
-	//¸üĞÂÎÄ¼şÃèÊö
+	//æ›´æ–°æ–‡ä»¶æè¿°
 	set_file_desc(fd);
 	
 	FS_LOG("after write id=%d,app_id=%d,start_page=%d,wsize=%d,size=%d\r\n",
 		fd.id,fd.app_id,fd.start_page,fd.wsize,fd.size);
 	
+	fs_unlock();
     return size;
 }
 
 /**
-@brief : ÎÄ¼ş¸ù¾İÆ«ÒÆĞ´ÈëÊı¾İ
+@brief : æ–‡ä»¶æ ¹æ®åç§»å†™å…¥æ•°æ®
 		
 @param : 
 -file_id
 -app_id 
--dat 		Êı¾İ
--size		×Ö½Ú
--offset		Æ«ÒÆ×Ö½Ú
+-dat 		æ•°æ®
+-size		å­—èŠ‚
+-offset		åç§»å­—èŠ‚
 
 @retval:
-- <0£¬@jacefs_error_t
-- >0£¬Ğ´ÈëÊı¾İ´óĞ¡£¬×Ö½Ú
+- <0ï¼Œ@jacefs_error_t
+- >0ï¼Œå†™å…¥æ•°æ®å¤§å°ï¼Œå­—èŠ‚
 */
 int jacefs_write(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,int offset)
 {
@@ -1331,18 +1877,18 @@ int jacefs_write(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,
 }  
 
 /**
-@brief : ÎÄ¼ş¶ÁÈ¡
+@brief : æ–‡ä»¶è¯»å–
 		
 @param : 
 -file_id
 -app_id 
--dat 		Êı¾İ
--size		×Ö½Ú
--offset		Æ«ÒÆ×Ö½Ú
+-dat 		æ•°æ®
+-size		å­—èŠ‚
+-offset		åç§»å­—èŠ‚
 
 @retval:
-- <0£¬@jacefs_error_t
-- >0£¬¶ÁÈ¡Êı¾İ´óĞ¡£¬×Ö½Ú
+- <0ï¼Œ@jacefs_error_t
+- >0ï¼Œè¯»å–æ•°æ®å¤§å°ï¼Œå­—èŠ‚
 */
 int jacefs_read(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,int offset)
 {
@@ -1357,8 +1903,12 @@ int jacefs_read(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,i
     }
 	
 	jacefs_fd_t fd;
+
+	fs_lock();
+
 	if(get_file_desc(file_id,app_id,&fd)!=FS_RET_SUCCESS)
 	{
+	    fs_unlock();
 		return FS_RET_FILE_NOT_EXIST;
 	}
 	
@@ -1368,6 +1918,7 @@ int jacefs_read(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,i
 	if(offset >= fd.wsize)
 	{
 		FS_LOG("offset =%d err !\r\n",offset);
+		fs_unlock();
 		return FS_RET_FILE_OVER_SIZE;
 	}
 	
@@ -1378,7 +1929,7 @@ int jacefs_read(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,i
 	}
 	
 	
-	//ÎÄ¼ş¶ÁÈ¡
+	//æ–‡ä»¶è¯»å–
 	uint32_t off_page,
 			 off_bytes_in_page;
 	uint32_t addr;
@@ -1387,27 +1938,30 @@ int jacefs_read(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,i
 	remaining_size=size;
 	already_read=0;
 	
+	//æ‰¾åˆ°æœ¬æ¬¡è¯»å–çš„æ•°æ®å¼€å§‹é¡µ
+	off_page=fd.start_page;
+    if(offset>=FS_PAGE_SIZE)
+    {
+        //ç”±äºæ–‡ä»¶å­˜å‚¨ä¸è¿ç»­ã€‚æ‰€ä»¥æœ¬æ¬¡è¯»å–çš„é¦–é¡µå¾—ä»æ–‡ä»¶é¦–é¡µé¡ºåºæŸ¥æ‰¾
+        for(int i=0;i<offset/FS_PAGE_SIZE;i++)
+          off_page=get_file_next_page(off_page);
+    }
+    off_bytes_in_page=offset%FS_PAGE_SIZE;
+    FS_LOG("read page=%d\r\n",off_page);
+
 	do{
-		off_page=fd.start_page;
-		if(offset>=FS_PAGE_SIZE)
-		{
-			for(int i=0;i<offset/FS_PAGE_SIZE;i++)
-				off_page=get_file_next_page(off_page);
-		}
-		FS_LOG("read page=%d\r\n",off_page);
-		
-		off_bytes_in_page=offset%FS_PAGE_SIZE;
-		
 		rsize=FS_PAGE_SIZE-off_bytes_in_page;
 		if(rsize>=remaining_size)
 		{
 			rsize=remaining_size;
 		}
 		
+		//è¯»å–æ•°æ®
 		addr=PAGE_TO_ADDR(off_page)+off_bytes_in_page;
 		if(fs_port_read(addr,rsize,&dat[already_read])!=rsize)
 		{
 			FS_LOG("read add=%x error!\r\n",addr);
+			fs_unlock();
 			return FS_RET_UNKNOW_ERR;
 		}
 		
@@ -1417,14 +1971,148 @@ int jacefs_read(jacefs_file_id_t file_id,uint16_t app_id,uint8_t *dat,int size,i
 		
 		FS_LOG("read size=%d,remain=%d \r\n",rsize,remaining_size);
 		
-	}while(remaining_size>0);
+		if(remaining_size>0)
+		{
+            off_page=get_file_next_page(off_page);
+            off_bytes_in_page=offset%FS_PAGE_SIZE;
+            FS_LOG("read page=%d\r\n",off_page);
+		}
+		else
+		{
+		    break;
+		}
+	}while(1);
 	
+	fs_unlock();
     return size;
 }
 
-//×Ô²â
+/**
+@brief : å¯»æ‰¾åŒä¸€æ–‡ä»¶IDå¯¹åº”çš„APP ID
+
+@param :
+-file_id    è¦æ‰¾çš„æ–‡ä»¶ID
+-app_id     æ‰¾åˆ°å¹¶è¿”å›çš„ app_id
+-offset     å¼€å§‹å¯»æ‰¾çš„æ–‡ä»¶åç§»æ•°ï¼Œè¿”å›æ‰¾åˆ°æ—¶æ–‡ä»¶åç§»
+
+@retval:
+- @jacefs_error_t
+
+*/
+jacefs_error_t jacefs_find_app_id(jacefs_file_id_t file_id,uint16_t *app_id,int *offset)
+{
+
+    if(m_fs_ready!=true)
+    {
+        return FS_RET_NOT_READY;
+    }
+
+    if(!app_id || !offset)
+    {
+        return FS_RET_PARAM_ERR;
+    }
+
+#if !FS_USE_RAM_CACHE
+    jacefs_fd_hdr_t fd_hdr;
+#else
+    jacefs_fd_hdr_t *fd_hdr;
+#endif
+    uint32_t page,next_page;
+    jacefs_fd_t *search_fd;
+    uint16_t i;
+
+    next_page=FILE_DESC_START_PAGE-SPACE_DESC_START_PAGE;
+    page=0;
+
+    fs_lock();
+
+    while(1)
+    {
+        page=find_file_desc_page(next_page);
+
+        if(page==0)
+            break;
+        next_page=page+1;
+
+#if !FS_USE_RAM_CACHE
+
+#else
+        fd_hdr=(jacefs_fd_hdr_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)];
+
+        if(fd_hdr->file_num==0 || fd_hdr->file_num>FILE_DESC_PER_PAGE)
+            continue;
+
+        search_fd=(jacefs_fd_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)+sizeof(jacefs_fd_hdr_t)];
+
+        //TODOï¼šè¿™é‡Œåªåšäº†åªæœ‰ä¸€ä¸ªpageæ–‡ä»¶æè¿°é¡µçš„æƒ…å†µï¼Œå¦‚æœå¤§äºä¸€é¡µå¯»æ‰¾å°†å‡ºé”™ï¼éœ€è¦ä¿®å¤ï¼
+        for(i=*offset;i<fd_hdr->file_num;i++ )
+        {
+            if(file_id==search_fd[i].id)
+            {
+                *app_id=search_fd[i].app_id;
+                *offset=i;
+
+                fs_unlock();
+                return FS_RET_SUCCESS;
+            }
+        }
+
+        *offset=i;
+#endif
+    }
+
+    fs_unlock();
+    return FS_RET_FILE_NOT_EXIST;
+}
+
+//æ‰“å°æ‰€æœ‰æ–‡ä»¶
+void print_all_file_desc(void)
+{
+
+#if !FS_USE_RAM_CACHE
+    jacefs_fd_hdr_t fd_hdr;
+#else
+    jacefs_fd_hdr_t *fd_hdr;
+#endif
+    uint32_t page,next_page;
+    jacefs_fd_t *search_fd;
+
+    next_page=FILE_DESC_START_PAGE-SPACE_DESC_START_PAGE;
+    page=0;
+
+    while(1)
+    {
+        page=find_file_desc_page(next_page);
+
+        if(page==0)
+            break;
+        next_page=page+1;
+
+#if !FS_USE_RAM_CACHE
+
+#else
+        fd_hdr=(jacefs_fd_hdr_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)];
+
+        if(fd_hdr->file_num==0 || fd_hdr->file_num>FILE_DESC_PER_PAGE)
+            continue;
+
+        search_fd=(jacefs_fd_t *)&m_file_desc_cache[PAGE_TO_FILE_DESC_ADDR(page)+sizeof(jacefs_fd_hdr_t)];
+
+        for(uint16_t i=0;i<fd_hdr->file_num;i++ )
+        {
+            os_printk("page=%d,file[%d] file_id=%d,app_id=%d,s_p=%d,size=%d,ws=%d\r\n",
+                page,i,
+                search_fd[i].id,search_fd[i].app_id,search_fd[i].start_page,
+                search_fd[i].size,search_fd[i].wsize);
+
+        }
+#endif
+    }
+}
+//è‡ªæµ‹
 void jacefs_self_test(void)
 {
+#if 0
     os_printk("\r\n");
     os_printk("SPACE_DESC_START_PAGE=%d\r\n",SPACE_DESC_START_PAGE);
     os_printk("FS_TOTAL_PAGE=%d\r\n",FS_TOTAL_PAGE);
@@ -1435,12 +2123,16 @@ void jacefs_self_test(void)
     os_printk("SPACE_BYTE_PER_PAGE=%d\r\n",SPACE_BYTE_PER_PAGE);
     os_printk("SPACE_DESC_PAGE_NUM=%d\r\n",SPACE_DESC_PAGE_NUM);
     os_printk("FS_MANAGE_PAGE_MAX=%d\r\n",FS_MANAGE_PAGE_MAX);
-    os_printk("FS_MANAGE_PAGE_MIN=%d\r\n",FS_MANAGE_PAGE_MIN);
+    os_printk("FS_MANAGE_PAGE_MIN=%d\r\n\r\n",FS_MANAGE_PAGE_MIN);
+
+    os_printk("jacefs_fd_t size=%d\r\n",sizeof(jacefs_fd_t));
     os_printk("\r\n");
-	
-//²âÊÔ¶Á
+#endif
+
+//æµ‹è¯•è¯»
 #define __printf_all_()\
 {\
+    jacefs_sync();\
 	page_desc_val_t rbuf[20];\
 	for(i=0;i<FS_MANAGE_PAGE_MIN+10/*FS_TOTAL_PAGE*/;i++)\
 	{\
@@ -1456,70 +2148,98 @@ void jacefs_self_test(void)
 }\
 os_printk("\r\n");	
 	
-    int i,j;
+#if 1
+	int i,j;
     uint32_t addr;
-    
-//    __printf_all_();
-	
-	
-	//ÔÙ³õÊ¼»¯
+
+	//å†åˆå§‹åŒ–
 	jacefs_init();
     __printf_all_();
-	
-	
-	//´´½¨ÎÄ¼ş 1
+#endif
+
+    //æ‰“å°æ‰€æœ‰æ–‡ä»¶
+    print_all_file_desc();
+
+    {
+		int offset=0;
+        uint16_t app_id,file_id;
+		
+		app_id=123;
+        file_id=5;
+        jacefs_create(&file_id,155,app_id);
+		
+		app_id=1234;
+        jacefs_create(&file_id,155,app_id);
+        
+        do{
+            if(jacefs_find_app_id(file_id,&app_id,&offset)!=FS_RET_SUCCESS)
+            {
+                break;
+            }
+            os_printk("app_id=%d,offset=%d\r\n",app_id,offset);
+            offset++;
+        }while(1);
+
+    }
+
+	__printf_all_();
+
+
+#if 0
+
+	//åˆ›å»ºæ–‡ä»¶ 1
 	jacefs_file_id_t f_id;
 	uint16_t app_id;
 	
 //
-//²âÊÔ´´½¨Óë»ØÊÕ
+//æµ‹è¯•åˆ›å»ºä¸å›æ”¶
 #if 0
 	app_id=1;
 	f_id=1;
 	jacefs_create(&f_id,155,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş2
+	//åˆ›å»ºæ–‡ä»¶2
 	f_id=2;
 	jacefs_create(&f_id,596+1024,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş4
+	//åˆ›å»ºæ–‡ä»¶4
 	f_id=4;
 	jacefs_create(&f_id,596+1024+1024+1024,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş5
+	//åˆ›å»ºæ–‡ä»¶5
 	f_id=5;
 	jacefs_create(&f_id,20,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş6
+	//åˆ›å»ºæ–‡ä»¶6
 	f_id=6;
 	jacefs_create(&f_id,256,app_id);
 	__printf_all_();
 	
-	//É¾³ıÎÄ¼ş1
+	//åˆ é™¤æ–‡ä»¶1
 	f_id=1;
 	jacefs_delete(f_id,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş3
+	//åˆ›å»ºæ–‡ä»¶3
 	f_id=3;
 	jacefs_create(&f_id,596+1024+1024,app_id);
 	__printf_all_();
 	
-	//É¾³ıÎÄ¼ş3
+	//åˆ é™¤æ–‡ä»¶3
 	f_id=3;
 	jacefs_delete(f_id,app_id);
 	__printf_all_();
 	
-	//É¾³ıÎÄ¼ş2
+	//åˆ é™¤æ–‡ä»¶2
 	f_id=2;
 	jacefs_delete(f_id,app_id);
 	__printf_all_();
 	
-	//É¾³ıÎÄ¼ş4
+	//åˆ é™¤æ–‡ä»¶4
 	f_id=4;
 	jacefs_delete(f_id,app_id);
 	__printf_all_();
@@ -1528,30 +2248,30 @@ os_printk("\r\n");
 #endif
 
 //
-//²âÊÔÉ¾³ı
+//æµ‹è¯•åˆ é™¤
 #if 0
 	app_id=2;
 	f_id=1;
 	jacefs_create(&f_id,155,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş2
+	//åˆ›å»ºæ–‡ä»¶2
 	f_id=2;
 	jacefs_create(&f_id,596,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş5
+	//åˆ›å»ºæ–‡ä»¶5
 	f_id=5;
 	jacefs_create(&f_id,20,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş6
+	//åˆ›å»ºæ–‡ä»¶6
 	app_id=1;
 	f_id=6;
 	jacefs_create(&f_id,256,app_id);
 	__printf_all_();
 	
-	//É¾³ı
+	//åˆ é™¤
 	jacefs_delete_by_appid(2);
 	__printf_all_();
 	
@@ -1562,30 +2282,33 @@ os_printk("\r\n");
 #endif
 
 //
-//²âÊÔ¶ÁĞ´
-#if 1
+//æµ‹è¯•è¯»å†™
+#if 0
+	app_id=3;
+
+	//åˆ›å»ºæ–‡ä»¶1
 	f_id=1;
 	jacefs_create(&f_id,155,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş2
+	//åˆ›å»ºæ–‡ä»¶2
 	f_id=2;
 	jacefs_create(&f_id,196,app_id);
 	__printf_all_();
 	
-	//É¾³ıÎÄ¼ş1
+	//åˆ é™¤æ–‡ä»¶1
 	f_id=1;
 	jacefs_delete(f_id,app_id);
 	__printf_all_();
 	
-	//´´½¨ÎÄ¼ş1
+	//åˆ›å»ºæ–‡ä»¶1
 	f_id=1;
 	jacefs_create(&f_id,155+1024,app_id);
 	__printf_all_();
 	
 	f_id=1;
 	
-	//ÎÄ¼ş1Ğ´
+	//æ–‡ä»¶1å†™
 	uint8_t wdat[90]={1,2,3,4,5,6,7,8,9,10};
 	for(i=0;i<sizeof(wdat);i++)
 		wdat[i]=i;
@@ -1596,7 +2319,7 @@ os_printk("\r\n");
 	jacefs_append(f_id,app_id,wdat,sizeof(wdat));
 	__printf_all_();
 	
-	//ÎÄ¼ş1¶Á
+	//æ–‡ä»¶1è¯»
 	uint8_t rdat[180];
 	jacefs_read(f_id,app_id,rdat,sizeof(rdat),0);
 	for(i=0;i<sizeof(rdat);i+=2)
@@ -1612,4 +2335,5 @@ os_printk("\r\n");
 	return;
 #endif
 	
+#endif
 }
